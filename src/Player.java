@@ -1,3 +1,5 @@
 public interface Player {
-    abstract public int getMove();
+    public default int getMove(){
+        return 0;
+    }
 }

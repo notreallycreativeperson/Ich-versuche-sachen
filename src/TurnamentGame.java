@@ -3,4 +3,9 @@ public class TurnamentGame extends Game{
     public void start() {
 
     }
+
+    @Override
+    public int game() {
+        return 0;
+    }
 }

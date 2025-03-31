@@ -15,6 +15,10 @@ public class PlayerHuman implements Player {
 
     @Override
     public int getMove() {
-        return 0;
+        int move=-1;
+        while (move<0){
+            move=Visual.getMove();
+        }
+        return move;
     }
 }

@@ -1,6 +1,9 @@
 abstract class PlayerMinimax implements Player {
-    @Override
-    public int getMove() {
 
-    }
+    private SearchMoves search;
+
+    public int getMove(Bord bord){
+        return search.getBestMove(bord);
+    };
+
 }

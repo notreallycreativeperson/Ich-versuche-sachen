@@ -1,12 +1,24 @@
 public class GamePvE extends Game{
 
     public GamePvE() {
-        player1 = new PlayerHuman();
-        player2 = Main.getBot();
+        setPlayer1(new PlayerHuman());
+        setPlayer2(Main.getBot());
+    }
+
+    public GamePvE(PlayerHuman player1, PlayerMinimax player2) {
+        setPlayer1(player1);
+        setPlayer2(player2);
+    }
+
+
+
+        @Override
+    public void start() {
+
     }
 
     @Override
-    public void start() {
-
+    public int game() {
+        return 0;
     }
 }
