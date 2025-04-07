@@ -1,6 +1,6 @@
 public class MiniMax {
 
-    EvalHandler eval;
+    final EvalHandler eval;
 
 
 
@@ -22,12 +22,12 @@ public class MiniMax {
         int bestScore;
         int bestMove = -1;
 
-        bestScore = (isMaxTurn?Integer.MIN_VALUE:Integer.MAX_VALUE);
+        bestScore = (isMaxTurn ? -1000000 : 100000);
             for (int i = 0; i < 7; i++) {
                 if (tiles[i][5] == 0) {
                     int row = Bord.getRow(tiles, i);
-                    tiles[i][row] = 1;
-                    int score = miniMax(tiles, depth - 1, alpha, beta, isMaxTurn==false, true);
+                    tiles[i][row] = (isMaxTurn ? 1 : -1);
+                    int score = miniMax(tiles, depth - 1, alpha, beta, !isMaxTurn, true);
                     tiles[i][row] = 0;
                     if (isMaxTurn) {
                         if (score > bestScore) {

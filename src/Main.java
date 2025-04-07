@@ -15,12 +15,4 @@ public class Main {
             default -> new GamePvE();
         };
     }
-
-    public static PlayerMinimax getBot(){
-        return switch (Visual.getBot()){
-            case 1-> new PlayerCompetent();
-            case 2-> new PlayerCompetent();
-            default -> new PlayerCompetent();
-        };
-    }
 }

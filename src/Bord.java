@@ -1,3 +1,4 @@
+@SuppressWarnings("SameParameterValue")
 public class Bord {
 
     public static final int[][] INDICES ={
@@ -9,10 +10,10 @@ public class Bord {
 
     int[][] tiles;
     boolean isMaxTurn;
-    int[] moves;
+    final int[] moves;
     int moveCount;
-    int[][] last8Moves = new int[2][8];
-    static boolean[][][] directions = new boolean[7][6][4];
+    final int[][] last8Moves = new int[2][8];
+    static final boolean[][][] directions = new boolean[7][6][4];
 
     Bord() {
         newBord();
@@ -21,6 +22,16 @@ public class Bord {
         moveCount = 0;
 
     }
+
+    @SuppressWarnings("SameParameterValue")
+    Bord(boolean isMaxTurn) {
+        newBord();
+        this.isMaxTurn = isMaxTurn;
+        moves = new int[42];
+        moveCount = 0;
+
+    }
+
 
     Bord(int[] moves) {
         newBord();
@@ -50,12 +61,22 @@ public class Bord {
         }
     }
 
-    public boolean isWon(){
-        return isWon(tiles);
-    }
-
-    public boolean isFinished(){
-        return isFinished(tiles);
+    public static boolean isWon(int[][] tiles) {
+        // Methode zur Überprüfung, ob ein Spieler gewonnen hat
+        for (int i = 0; i < 7; i++) {
+            for (int j = 0; j < 6; j++) {
+                if (tiles[i][j] != 0) {
+                    for (int k = 0; k < 4; k++) {
+                        if (directions[i][j][k]){
+                            if ((tiles[i][j] == tiles[i + INDICES[k][0]][j + INDICES[k][1]]) && (tiles[i][j] == tiles[i + INDICES[k][0] * 2][j + INDICES[k][1] * 2]) && (tiles[i][j] == tiles[i + INDICES[k][0] * 3][j + INDICES[k][1] * 3]))
+                            {return true;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return false;
     }
 
 
@@ -75,32 +96,15 @@ public class Bord {
         return row;
     }
 
-    public void unMove() {
-        if (removeMove()) {
-            return;
-        }
-        isMaxTurn = !isMaxTurn;
-        moveCount--;
-        moves[moveCount] = 0;
-        tiles[last8Moves[0][0]][last8Moves[0][1]] = 0;
+    public static boolean check(int[][] tiles){
+
+        return isWon(tiles) || isFinished(tiles);
+
     }
 
-    public static boolean isWon(int[][] tiles) { //can be optimized through cutting out certain areas
-        // Methode zur Überprüfung, ob ein Spieler gewonnen hat
-        for (int i = 0; i < 7; i++) {
-            for (int j = 0; j < 6; j++) {
-                if (tiles[i][j] != 0) {
-                    for (int k = 0; k < 4; k++) {
-                        if (directions[i][j][k]){
-                            if ((tiles[i][j] == tiles[i + INDICES[k][0]*1][j+ INDICES[k][1]*1]) && (tiles[i][j] == tiles[i + INDICES[k][0]*2][j+ INDICES[k][1]*2]) && (tiles[i][j] == tiles[i + INDICES[k][0]*3][j+ INDICES[k][1]*3]))
-                            {return true;
-                            }
-                        }
-                    }
-                }
-            }
-        }
-        return false;
+    @SuppressWarnings("unused")
+    public boolean isFinished(){
+        return isFinished(tiles);
     }
 
     public void move(int move) {
@@ -180,14 +184,15 @@ public class Bord {
         return check(tiles);
     }
 
-    public static boolean check(int[][] tiles){
-
-        if (isWon(tiles)||isFinished(tiles)){
-            return true;
+    @SuppressWarnings("unused")
+    public void unMove() {
+        if (removeMove()) {
+            return;
         }
-
-        return false;
-
+        isMaxTurn = !isMaxTurn;
+        moveCount--;
+        moves[moveCount] = 0;
+        tiles[last8Moves[0][0]][last8Moves[0][1]] = 0;
     }
 
 

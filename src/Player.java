@@ -1,5 +1,3 @@
-public interface Player {
-    public default int getMove(){
-        return 0;
-    }
+abstract class Player {
+    public abstract int getMove(Bord bord);
 }
