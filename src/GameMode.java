@@ -1,3 +1,3 @@
 public enum GameMode {
-    EVE, FAST, PVE, PVP, TURNAMENT;
+    PvE,TournamentGame,PvP,EvE
 }

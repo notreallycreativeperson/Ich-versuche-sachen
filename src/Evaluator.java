@@ -1,3 +1,3 @@
 public interface Evaluator {
-    public int evaluate(int[][] tiles);
+    int evaluate(int[][] tiles);
 }

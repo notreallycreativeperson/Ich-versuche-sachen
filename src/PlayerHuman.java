@@ -1,4 +1,4 @@
-public class PlayerHuman implements Player {
+public class PlayerHuman extends Player {
 
     public final String name;
 
@@ -14,7 +14,7 @@ public class PlayerHuman implements Player {
 
 
     @Override
-    public int getMove() {
+    public int getMove(Bord bord) {
         int move=-1;
         while (move<0){
             move=Visual.getMove();

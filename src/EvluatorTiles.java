@@ -1,4 +1,4 @@
-public class EvluatorTiles {
+public class EvluatorTiles implements Evaluator {
     private int[][] values = {
             {3, 13, 25, 28, 21, 17},
             {8, 25, 35, 40, 31, 26},
@@ -15,11 +15,18 @@ public class EvluatorTiles {
     }
 
     public EvluatorTiles() {
-        this.values = values;
     }
 
     public int evaluate(int[][] tiles){
-
+        int eval = 0;
+        for (int i = 0; i < tiles.length; i++) {
+            for (int j = 0; j < tiles[0].length; j++) {
+                if (tiles[i][j] != 0) {
+                    eval += tiles[i][j] * values[i][j];
+                }
+            }
+        }
+        return eval;
     }
 
 

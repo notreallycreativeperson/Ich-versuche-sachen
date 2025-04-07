@@ -1,7 +1,7 @@
 public class EvalHandler {
 
-    Evaluator[] evaluators;
-    int[] weights;
+    final Evaluator[] evaluators;
+    final int[] weights;
 
     EvalHandler(Evaluator[] evaluators, int[] weights){
         this.evaluators=evaluators;

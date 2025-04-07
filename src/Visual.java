@@ -5,7 +5,7 @@ import static java.lang.System.out;
 
 public class Visual {
 
-    static Scanner scanner=new Scanner(System.in);
+    static final Scanner scanner = new Scanner(System.in);
 
     public static int getMode(){
         int mode=-1;
@@ -25,7 +25,6 @@ public class Visual {
         int bot=-1;
         do{
             System.out.println("Welcher Bot soll spielen");
-            System.out.println("1 für schnelles spiel");
             try {
                 bot = Integer.parseInt(scanner.next());
             } catch (Exception e) {
