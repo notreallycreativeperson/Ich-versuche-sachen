@@ -1,4 +1,4 @@
-abstract class PlayerMinimax extends Player {
+abstract class PlayerMinimax implements Player {
 
     protected SearchMoves search;
 

@@ -1,5 +1,15 @@
 @SuppressWarnings("SameParameterValue")
 public class Bord {
+    // Constants for board dimensions
+    public static final int COLUMNS = 7;
+    public static final int ROWS = 6;
+    public static final int MAX_MOVES = COLUMNS * ROWS;
+    public static final int WINNING_LENGTH = 4;
+
+    // Player constants
+    public static final int EMPTY = 0;
+    public static final int PLAYER_MAX = 1;
+    public static final int PLAYER_MIN = -1;
 
     public static final int[][] INDICES ={
             {1,0},
@@ -12,22 +22,22 @@ public class Bord {
     boolean isMaxTurn;
     final int[] moves;
     int moveCount;
-    final int[][] last8Moves = new int[2][8];
-    static final boolean[][][] directions = new boolean[7][6][4];
+    final int[][] last8Moves = new int[8][2];
+    static final boolean[][][] directions = new boolean[COLUMNS][ROWS][4];
 
     Bord() {
         newBord();
         isMaxTurn = Visual.whoStarts();
-        moves = new int[42];
+        moves = new int[MAX_MOVES];
         moveCount = 0;
-
+        initializeLast8Moves();
     }
 
     @SuppressWarnings("SameParameterValue")
     Bord(boolean isMaxTurn) {
         newBord();
         this.isMaxTurn = isMaxTurn;
-        moves = new int[42];
+        moves = new int[MAX_MOVES];
         moveCount = 0;
 
     }
@@ -36,43 +46,50 @@ public class Bord {
     Bord(int[] moves) {
         newBord();
         this.moves = moves;
-        boolean isMaxTurn = true;
+        this.isMaxTurn = true; // Initialize isMaxTurn
         for (int move : moves) {
             tiles[move][getRow(move)] = getPlayer(isMaxTurn);
             switchPlayer();
         }
 
         moveCount = moves.length;
-        for (int i = 0; i < 8; i++) {
+        for (int i = 0; i < Math.min(8, moves.length); i++) { // Prevent ArrayIndexOutOfBoundsException
             last8Moves[i][0] = moves[moves.length - 1 - i];
             last8Moves[i][1] = getRow(moves[moves.length - 1 - i]);
         }
-
     }
 
     protected static void setDirections() {
-        for (int i = 0; i < 7; i++) {
-            for (int j = 0; j < 6; j++) {
-                directions[i][j][0] = i < 4;
-                directions[i][j][1] = (i < 4 && j < 3);
-                directions[i][j][2] = j < 3;
-                directions[i][j][3] = (i > 2 && j < 3);
+        for (int i = 0; i < COLUMNS; i++) {
+            for (int j = 0; j < ROWS; j++) {
+                directions[i][j][0] = i < COLUMNS - WINNING_LENGTH + 1;
+                directions[i][j][1] = (i < COLUMNS - WINNING_LENGTH + 1 && j < ROWS - WINNING_LENGTH + 1);
+                directions[i][j][2] = j < ROWS - WINNING_LENGTH + 1;
+                directions[i][j][3] = (i > WINNING_LENGTH - 2 && j < ROWS - WINNING_LENGTH + 1);
             }
         }
     }
 
     public static boolean isWon(int[][] tiles) {
-        // Methode zur Überprüfung, ob ein Spieler gewonnen hat
-        for (int i = 0; i < 7; i++) {
-            for (int j = 0; j < 6; j++) {
-                if (tiles[i][j] != 0) {
-                    for (int k = 0; k < 4; k++) {
-                        if (directions[i][j][k]){
-                            if ((tiles[i][j] == tiles[i + INDICES[k][0]][j + INDICES[k][1]]) && (tiles[i][j] == tiles[i + INDICES[k][0] * 2][j + INDICES[k][1] * 2]) && (tiles[i][j] == tiles[i + INDICES[k][0] * 3][j + INDICES[k][1] * 3]))
-                            {return true;
-                            }
+        for (int col = 0; col < COLUMNS; col++) {
+            for (int row = 0; row < ROWS; row++) {
+                if (tiles[col][row] == EMPTY) continue;
+
+                for (int dirIndex = 0; dirIndex < INDICES.length; dirIndex++) {
+                    if (!directions[col][row][dirIndex]) continue;
+
+                    boolean isWinningLine = true;
+                    for (int step = 1; step < WINNING_LENGTH; step++) {
+                        int nextCol = col + INDICES[dirIndex][0] * step;
+                        int nextRow = row + INDICES[dirIndex][1] * step;
+
+                        if (tiles[col][row] != tiles[nextCol][nextRow]) {
+                            isWinningLine = false;
+                            break;
                         }
                     }
+
+                    if (isWinningLine) return true;
                 }
             }
         }
@@ -81,19 +98,21 @@ public class Bord {
 
 
     private void newBord() {
-        tiles = new int[7][6];
+        tiles = new int[COLUMNS][ROWS];
         setDirections();
     }
 
     public static int getRow(int[][] tiles ,int move) {
-        int row = -1;
-        for (int i = 0; i < 6; i++) {
-            if (tiles[move][i] == 0) {
-                row = i;
-                break;
+        if (move < 0 || move >= COLUMNS) {
+            throw new IllegalArgumentException("Invalid move at get row: " + move);
+        }
+
+        for (int row = 0; row < ROWS; row++) {
+            if (tiles[move][row] == EMPTY) {
+                return row;
             }
         }
-        return row;
+        return -1; // Column is full
     }
 
     public static boolean check(int[][] tiles){
@@ -108,8 +127,13 @@ public class Bord {
     }
 
     public void move(int move) {
+        if (move < 0 || move >= COLUMNS) {
+            throw new IllegalArgumentException("Invalid move: " + move);
+        }
+
         int row = getRow(move);
-        if (row < 0) return;
+        if (row < 0) return; // Column is full
+
         tiles[move][row] = getPlayer(isMaxTurn);
         moves[moveCount] = move;
         addMove(move, row);
@@ -123,14 +147,16 @@ public class Bord {
     }
 
     public int getRow(int move) {
-        int row = -1;
-        for (int i = 0; i < 6; i++) {
-            if (tiles[move][i] == 0) {
-                row = i;
-                break;
+        if (move < 0 || move >= COLUMNS) {
+            return -1; // Invalid column
+        }
+
+        for (int row = 0; row < ROWS; row++) {
+            if (tiles[move][row] == EMPTY) {
+                return row;
             }
         }
-        return row;
+        return -1; // Column is full
     }
 
     private void addMove(int move, int row) {
@@ -140,15 +166,9 @@ public class Bord {
         }
         last8Moves[0][0] = move;
         last8Moves[0][1] = row;
-
-    }
-
-    private void addMove(int move) {
-        addMove(move, getRow(move));
     }
 
     private boolean removeMove() {
-
         if (last8Moves[0][0] == -1) return true;
 
         for (int i = 0; i < 7; i++) {
@@ -161,11 +181,7 @@ public class Bord {
     }
 
     private int getPlayer(boolean isMaxTurn) {
-        if (isMaxTurn) {
-            return 1;
-        } else {
-            return -1;
-        }
+        return isMaxTurn ? PLAYER_MAX : PLAYER_MIN;
     }
 
     private void switchPlayer() {
@@ -195,5 +211,10 @@ public class Bord {
         tiles[last8Moves[0][0]][last8Moves[0][1]] = 0;
     }
 
-
+    private void initializeLast8Moves() {
+        for (int i = 0; i < 8; i++) {
+            last8Moves[i][0] = -1;
+            last8Moves[i][1] = -1;
+        }
+    }
 }

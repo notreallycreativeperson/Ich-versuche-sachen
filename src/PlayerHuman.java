@@ -1,4 +1,4 @@
-public class PlayerHuman extends Player {
+public class PlayerHuman implements Player {
 
     public final String name;
 

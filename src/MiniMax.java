@@ -2,8 +2,6 @@ public class MiniMax {
 
     final EvalHandler eval;
 
-
-
     MiniMax(EvalHandler eval){
         this.eval=eval;
     }
@@ -47,13 +45,6 @@ public class MiniMax {
                     }
                 }
             }
-
-
-
-
         return (isScore ? bestScore : bestMove);
     }
-
-
-
 }

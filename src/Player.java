@@ -1,3 +1,3 @@
-abstract class Player {
-    public abstract int getMove(Bord bord);
+interface Player {
+    int getMove(Bord bord);
 }
