@@ -1,6 +1,6 @@
 public class PlayerCompetent extends PlayerMinimax{
 
-    final Evaluator[] evaluators = {new EvaluatorLinesStrong(), new EvluatorTiles()};
+    final Evaluator[] evaluators = {new EvaluatorLinesStrong(), new EvaluatorTiles()};
     final int[] weights = {2, 1};
 
     PlayerCompetent(){

@@ -1,13 +1,13 @@
 public class Main {
 
     public static void main(String[] args) {
-        Startableable startableable =setMode();
-        startableable.start();
+        Startable startable = setMode();
+        startable.start();
     }
 
 
 
-    private static Startableable setMode(){
+    private static Startable setMode(){
         return switch (Visual.getMode()) {
             case 1 -> new GameFast();
             case 2 -> new GamePvP();

@@ -1,4 +1,4 @@
-public class TournamentHandler implements Startableable {
+public class TournamentHandler implements Startable {
 
 
     @Override

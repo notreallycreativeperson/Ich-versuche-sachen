@@ -51,8 +51,8 @@ public class Visual {
             try {
                 input = Integer.parseInt(scanner.next());
                 if (input < 4 && input > 0) run = false;
-            } catch (Exception _) {
-
+            } catch (Exception e){
+                out.println("Bitte gib eine zulässige Zahl ein.");
             }
         }
         return switch (input) {

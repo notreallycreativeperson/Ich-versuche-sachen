@@ -1,4 +1,4 @@
-public abstract class Game implements Startableable {
+public abstract class Game implements Startable {
     public GameMode gameMode;
     protected Player player1;
     protected Player player2;
