@@ -75,3 +75,48 @@ public abstract class Game implements Startable {
         this.gameMode = gameMode;
     }
 }
+
+class GameEvE extends Game{
+
+    GameEvE(){
+        player1 = PlayerMinimax.getBot();
+        player2 = PlayerMinimax.getBot();
+    }
+}
+
+class GamePvE extends Game{
+    public GamePvE() {
+        setPlayer1(new PlayerHuman());
+        setPlayer2(PlayerMinimax.getBot());
+    }
+    public GamePvE(PlayerHuman player1, PlayerMinimax player2, Bord bord) {
+        super(bord);
+        setPlayer1(player1);
+        setPlayer2(player2);
+    }
+}
+
+class GameFast extends GamePvE {
+    public GameFast() {
+        super(new PlayerHuman("Spieler 1"), new PlayerCompetent(6), new Bord(true));
+    }
+}
+
+class GamePvP extends Game{
+    GamePvP(){
+        setPlayer1(new PlayerHuman());
+        setPlayer2(new PlayerHuman());
+    }
+}
+
+class TurnamentGame extends Game{
+    @Override
+    public void start() {
+
+    }
+
+    @Override
+    public int game() {
+        return 0;
+    }
+}

@@ -1,9 +1,22 @@
+import javax.swing.*;
 import java.util.Random;
 import java.util.Scanner;
-
 import static java.lang.System.out;
 
-public class Visual {
+
+class VisualBord extends JPanel {
+    int x;
+    int y;
+
+    VisualBord(){
+        
+    }
+    public VisualBord get(){
+        return this;
+    };
+}
+
+class Visual {
 
     static final Scanner scanner = new Scanner(System.in);
 
@@ -25,6 +38,7 @@ public class Visual {
         int bot=-1;
         do{
             System.out.println("Welcher Bot soll spielen");
+            System.out.println("1->Strange | 2->Stupid | 3->Competent");
             try {
                 bot = Integer.parseInt(scanner.next());
             } catch (Exception e) {
