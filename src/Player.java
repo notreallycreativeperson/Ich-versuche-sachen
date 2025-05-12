@@ -29,7 +29,7 @@ class PlayerHuman implements Player {
 
 abstract class PlayerMinimax implements Player {
 
-    protected SearchMoves search;
+    protected Search search;
 
     public static PlayerMinimax getBot() {
         return switch (Visual.getBot()) {
@@ -39,6 +39,7 @@ abstract class PlayerMinimax implements Player {
         };
     }
 
+    @Override
     public int getMove(Bord bord){
         return search.getBestMove(bord);
     }
@@ -52,13 +53,13 @@ class PlayerCompetent extends PlayerMinimax{
 
     PlayerCompetent(){
         EvalHandler eval = new EvalHandler(evaluators, weights);
-        search = new SearchMoves(eval, 6);
+        search = new Search(eval, 6);
     }
 
     @SuppressWarnings("SameParameterValue")
     PlayerCompetent(int depth) {
         EvalHandler eval = new EvalHandler(evaluators, weights);
-        search = new SearchMoves(eval, depth);
+        search = new Search(eval, depth);
     }
 }
 
@@ -69,7 +70,7 @@ class PlayerStrange extends PlayerMinimax {
 
     public PlayerStrange() {
         EvalHandler eval = new EvalHandler(evaluators, weights);
-        search = new SearchMoves(eval, 3);
+        search = new Search(eval, 3);
     }
 }
 

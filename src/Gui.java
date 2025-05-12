@@ -1,20 +1,7 @@
-import javax.swing.*;
 import java.util.Random;
 import java.util.Scanner;
+
 import static java.lang.System.out;
-
-
-class VisualBord extends JPanel {
-    int x;
-    int y;
-
-    VisualBord(){
-        
-    }
-    public VisualBord get(){
-        return this;
-    };
-}
 
 class Visual {
 
@@ -23,12 +10,12 @@ class Visual {
     public static int getMode(){
         int mode=-1;
         do{
-            System.out.println("In welchem Modus möchtest du spielen?");
-            System.out.println("1 für schnelles spiel");
+            out.println("In welchem Modus möchtest du spielen?");
+            out.println("1 für schnelles spiel");
             try {
                 mode = Integer.parseInt(scanner.next());
             } catch (Exception e) {
-                System.out.println("Bitte gib eine zulässige Zahl ein.");
+                out.println("Bitte gib eine zulässige Zahl ein.");
             }
         }while (mode==-1);
         return mode;
@@ -37,22 +24,22 @@ class Visual {
     public static int getBot(){
         int bot=-1;
         do{
-            System.out.println("Welcher Bot soll spielen");
-            System.out.println("1->Strange | 2->Stupid | 3->Competent");
+            out.println("Welcher Bot soll spielen");
+            out.println("1->Strange | 2->Stupid | 3->Competent");
             try {
                 bot = Integer.parseInt(scanner.next());
             } catch (Exception e) {
-                System.out.println("Bitte gib eine zulässige Zahl ein.");
+                out.println("Bitte gib eine zulässige Zahl ein.");
             }
         }while (bot==-1);
         return bot;
     }
 
     public static String getName() {
-        System.out.println("Spieler, wie ist dein Name?");
+        out.println("Spieler, wie ist dein Name?");
         String name = scanner.next();
-        System.out.println("Hallo "+ name);
-        System.out.println();
+        out.println("Hallo " + name);
+        out.println();
         return name;
     }
 
@@ -85,7 +72,7 @@ class Visual {
     }
 
     public static void displayBord(Bord bord) {
-        displayBord(bord.tiles);
+        displayBord(bord.getTiles());
     }
 
     public static void displayBord(int[][] bord) {
@@ -134,4 +121,7 @@ class Visual {
         }
         return move;
     }
+
+
+
 }

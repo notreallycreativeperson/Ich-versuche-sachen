@@ -5,15 +5,13 @@ public class Main {
         startable.start();
     }
 
-
-
     private static Startable setMode(){
         return switch (Visual.getMode()) {
-            case 1 -> new GameFast();
-            case 2 -> new GamePvP();
-            case 3 -> new GameEvE();
+            case 1 -> new Game.Fast();
+            case 2 -> new Game.PvP();
+            case 3 -> new Game.EvE();
             case 4 -> new TournamentHandler();
-            default -> new GamePvE();
+            default -> new Game.PvE();
         };
     }
 }

@@ -47,4 +47,5 @@ public class MiniMax {
             }
         return (isScore ? bestScore : bestMove);
     }
+
 }

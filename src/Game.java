@@ -1,12 +1,12 @@
 public abstract class Game implements Startable {
-    public GameMode gameMode;
+    private GameMode gameMode;
     protected Player player1;
     protected Player player2;
     public Bord bord;
     private int rev = 0;
 
-    Game(){
-        bord=new Bord();
+    Game() {
+        bord = new Bord();
     }
 
     Game(Bord bord) {
@@ -28,13 +28,13 @@ public abstract class Game implements Startable {
     protected int game() {
 
         while (!bord.check() && rev <= 4) {
-            int move=-1;
+            int move = -1;
             rev = 0;
             while (bord.getHumanRow(move) < 0 && rev <= 4) {
                 if (bord.isMaxTurn) {
                     System.out.println("Spieler 1:");
                     move = player1.getMove(bord);
-                }else {
+                } else {
                     System.out.println("Spieler 2:");
                     move = player2.getMove(bord);
                 }
@@ -49,8 +49,8 @@ public abstract class Game implements Startable {
 
         }
 
-        if(Bord.isWon(bord.tiles)){
-            return (bord.isMaxTurn?2:1);
+        if (Bord.isWon(bord.getTiles())) {
+            return (bord.isMaxTurn ? 2 : 1);
         }
         return -1;
     }
@@ -74,49 +74,51 @@ public abstract class Game implements Startable {
     public void setGameMode(GameMode gameMode) {
         this.gameMode = gameMode;
     }
-}
 
-class GameEvE extends Game{
 
-    GameEvE(){
-        player1 = PlayerMinimax.getBot();
-        player2 = PlayerMinimax.getBot();
-    }
-}
+    static class EvE extends Game {
 
-class GamePvE extends Game{
-    public GamePvE() {
-        setPlayer1(new PlayerHuman());
-        setPlayer2(PlayerMinimax.getBot());
-    }
-    public GamePvE(PlayerHuman player1, PlayerMinimax player2, Bord bord) {
-        super(bord);
-        setPlayer1(player1);
-        setPlayer2(player2);
-    }
-}
-
-class GameFast extends GamePvE {
-    public GameFast() {
-        super(new PlayerHuman("Spieler 1"), new PlayerCompetent(6), new Bord(true));
-    }
-}
-
-class GamePvP extends Game{
-    GamePvP(){
-        setPlayer1(new PlayerHuman());
-        setPlayer2(new PlayerHuman());
-    }
-}
-
-class TurnamentGame extends Game{
-    @Override
-    public void start() {
-
+        EvE() {
+            player1 = PlayerMinimax.getBot();
+            player2 = PlayerMinimax.getBot();
+        }
     }
 
-    @Override
-    public int game() {
-        return 0;
+    static class PvE extends Game {
+        public PvE() {
+            setPlayer1(new PlayerHuman());
+            setPlayer2(PlayerMinimax.getBot());
+        }
+
+        public PvE(PlayerHuman player1, PlayerMinimax player2, Bord bord) {
+            super(bord);
+            setPlayer1(player1);
+            setPlayer2(player2);
+        }
+    }
+
+    static class Fast extends PvE {
+        public Fast() {
+            super(new PlayerHuman("Spieler 1"), new PlayerCompetent(6), new Bord(true));
+        }
+    }
+
+    static class PvP extends Game {
+        PvP() {
+            setPlayer1(new PlayerHuman());
+            setPlayer2(new PlayerHuman());
+        }
+    }
+
+    static class Turnament extends Game {
+        @Override
+        public void start() {
+
+        }
+
+        @Override
+        public int game() {
+            return 0;
+        }
     }
 }

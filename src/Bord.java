@@ -10,23 +10,26 @@ public class Bord {
     public static final int EMPTY = 0;
     public static final int PLAYER_MAX = 1;
     public static final int PLAYER_MIN = -1;
-
-    public static final int[][] INDICES ={
-            {1,0},
-            {1,1},
-            {0,1},
-            {-1,1}
+    public static final int[][] INDICES = {
+            {1, 0},
+            {1, 1},
+            {0, 1},
+            {-1, 1}
     };
 
-    int[][] tiles;
+    private int[][] tiles;
     boolean isMaxTurn;
     final int[] moves;
     int moveCount;
     final int[][] last8Moves = new int[8][2];
-    static final boolean[][][] directions = new boolean[COLUMNS][ROWS][4];
+    static final boolean[][][] directions = new boolean[COLUMNS][ROWS][INDICES.length];
+
+    public int[][] getTiles() {
+        return tiles;
+    }
 
     Bord() {
-        newBord();
+        initializeBord();
         isMaxTurn = Visual.whoStarts();
         moves = new int[MAX_MOVES];
         moveCount = 0;
@@ -35,20 +38,25 @@ public class Bord {
 
     @SuppressWarnings("SameParameterValue")
     Bord(boolean isMaxTurn) {
-        newBord();
+        initializeBord();
         this.isMaxTurn = isMaxTurn;
         moves = new int[MAX_MOVES];
         moveCount = 0;
-
     }
 
-
     Bord(int[] moves) {
-        newBord();
+        initializeBord();
         this.moves = moves;
         this.isMaxTurn = true; // Initialize isMaxTurn
         for (int move : moves) {
-            tiles[move][getRow(move)] = getPlayer(isMaxTurn);
+            if (move < 0 || move >= COLUMNS) {
+                throw new IllegalArgumentException("Move out of bounds: " + move);
+            }
+            int row = getRow(move);
+            if (row < 0) {
+                throw new IllegalArgumentException("Column " + move + " is already full.");
+            }
+            tiles[move][row] = getPlayer(isMaxTurn);
             switchPlayer();
         }
 
@@ -60,6 +68,8 @@ public class Bord {
     }
 
     protected static void setDirections() {
+        // Only initialize if not already set
+        if (directions[0][0][0]) return;
         for (int i = 0; i < COLUMNS; i++) {
             for (int j = 0; j < ROWS; j++) {
                 directions[i][j][0] = i < COLUMNS - WINNING_LENGTH + 1;
@@ -96,17 +106,8 @@ public class Bord {
         return false;
     }
 
-
-    private void newBord() {
-        tiles = new int[COLUMNS][ROWS];
-        setDirections();
-    }
-
-    public static int getRow(int[][] tiles ,int move) {
-        if (move < 0 || move >= COLUMNS) {
-            throw new IllegalArgumentException("Invalid move at get row: " + move);
-        }
-
+    public static int getRow(int[][] tiles, int move) {
+        Bord.checkMoveBounds(move);
         for (int row = 0; row < ROWS; row++) {
             if (tiles[move][row] == EMPTY) {
                 return row;
@@ -115,34 +116,39 @@ public class Bord {
         return -1; // Column is full
     }
 
-    public static boolean check(int[][] tiles){
+    static private void checkMoveBounds(int move) {
+        if (move < 0 || move >= MAX_MOVES) {
+            throw new IllegalArgumentException("Move out of bounds: " + move);
+        }
+    }
 
+    public static boolean check(int[][] tiles) {
         return isWon(tiles) || isFinished(tiles);
-
     }
 
     @SuppressWarnings("unused")
-    public boolean isFinished(){
+    public boolean isFinished() {
         return isFinished(tiles);
     }
 
-    public void move(int move) {
+    public boolean move(int move) {
         if (move < 0 || move >= COLUMNS) {
             throw new IllegalArgumentException("Invalid move: " + move);
         }
 
         int row = getRow(move);
-        if (row < 0) return; // Column is full
+        if (row < 0) return false; // Column is full
 
         tiles[move][row] = getPlayer(isMaxTurn);
         moves[moveCount] = move;
         addMove(move, row);
         moveCount++;
         switchPlayer();
+        return true;
     }
 
-    public int getHumanRow(int move){
-        if (move==-1) return move;
+    public int getHumanRow(int move) {
+        if (move == -1) return move;
         else return getRow(move);
     }
 
@@ -171,12 +177,12 @@ public class Bord {
     private boolean removeMove() {
         if (last8Moves[0][0] == -1) return true;
 
-        for (int i = 0; i < 7; i++) {
+        for (int i = 0; i < last8Moves.length - 1; i++) {
             last8Moves[i][0] = last8Moves[i + 1][0];
             last8Moves[i][1] = last8Moves[i + 1][1];
         }
-        last8Moves[7][0] = -1;
-        last8Moves[7][1] = -1;
+        last8Moves[last8Moves.length - 1][0] = -1;
+        last8Moves[last8Moves.length - 1][1] = -1;
         return false;
     }
 
@@ -189,14 +195,13 @@ public class Bord {
     }
 
     public static boolean isFinished(int[][] tiles) {
-        for (int i = 0; i < 7; i++) {
-            if (tiles[i][5] == 0) return false;
+        for (int i = 0; i < COLUMNS; i++) {
+            if (tiles[i][ROWS - 1] == EMPTY) return false;
         }
-
         return true;
     }
 
-    public boolean check(){
+    public boolean check() {
         return check(tiles);
     }
 
@@ -212,9 +217,14 @@ public class Bord {
     }
 
     private void initializeLast8Moves() {
-        for (int i = 0; i < 8; i++) {
+        for (int i = 0; i < last8Moves.length; i++) {
             last8Moves[i][0] = -1;
             last8Moves[i][1] = -1;
         }
+    }
+
+    private void initializeBord() {
+        tiles = new int[COLUMNS][ROWS];
+        setDirections();
     }
 }
