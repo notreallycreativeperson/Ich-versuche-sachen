@@ -1,5 +1,4 @@
 public abstract class Game implements Startable {
-    private GameMode gameMode;
     protected Player player1;
     protected Player player2;
     public Bord bord;
@@ -66,15 +65,6 @@ public abstract class Game implements Startable {
     public void setPlayer1(Player player1) {
         this.player1 = player1;
     }
-
-    public GameMode getGameMode() {
-        return gameMode;
-    }
-
-    public void setGameMode(GameMode gameMode) {
-        this.gameMode = gameMode;
-    }
-
 
     static class EvE extends Game {
 
