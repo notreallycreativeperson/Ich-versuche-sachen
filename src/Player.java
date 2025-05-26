@@ -53,7 +53,7 @@ class PlayerCompetent extends PlayerMinimax{
 
     PlayerCompetent(){
         EvalHandler eval = new EvalHandler(evaluators, weights);
-        search = new Search(eval, 6);
+        search = new Search(eval, 20);
     }
 
     @SuppressWarnings("SameParameterValue")

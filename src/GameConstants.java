@@ -16,18 +16,8 @@ public class GameConstants {
             {0, 1},
             {-1, 1}
     };
-    public static final int[][] INDICES_LONG = {
-            {1, 0},
-            {1, 1},
-            {0, 1},
-            {-1, 1},
-            {-1, 0},
-            {-1, -1},
-            {0, -1},
-            {1, -1}
-    };
 
-    static final boolean[][][] directions = new boolean[COLUMNS][ROWS][INDICES_LONG.length];
+    static final boolean[][][] directions = new boolean[COLUMNS][ROWS][INDICES.length];
 
     protected static void setDirections() {
         // Only initialize if not already set
@@ -38,10 +28,6 @@ public class GameConstants {
                 directions[i][j][1] = (i < COLUMNS - WINNING_LENGTH + 1 && j < ROWS - WINNING_LENGTH + 1);
                 directions[i][j][2] = j < ROWS - WINNING_LENGTH + 1;
                 directions[i][j][3] = (i > WINNING_LENGTH - 2 && j < ROWS - WINNING_LENGTH + 1);
-                directions[i][j][4] = i > WINNING_LENGTH - 2;
-                directions[i][j][5] = (i > WINNING_LENGTH - 2 && j > WINNING_LENGTH - 2);
-                directions[i][j][6] = j > WINNING_LENGTH - 2;
-                directions[i][j][7] = (i < COLUMNS - WINNING_LENGTH + 1 && j > WINNING_LENGTH - 2);
             }
         }
     }

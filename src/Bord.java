@@ -215,16 +215,55 @@ public class Bord {
         if (moveCount < 3) return false;
         int move = moves[moveCount-1];
         int row = last20Moves[0][1];
-        for (int dirIndex = 0; dirIndex < GameConstants.INDICES_LONG.length; dirIndex++) {
+        for (int dirIndex = 0; dirIndex < GameConstants.INDICES.length; dirIndex++) {
             if (GameConstants.directions[move][row][dirIndex]){
                 for (int step = 1; step < GameConstants.WINNING_LENGTH; step++) {
-                    if(tiles[move][row]!=tiles[move+GameConstants.INDICES_LONG[dirIndex][0]*step][row+GameConstants.INDICES_LONG[dirIndex][1]*step]){
+                    if(tiles[move][row]!=tiles[move+GameConstants.INDICES[dirIndex][0]*step][row+GameConstants.INDICES[dirIndex][1]*step]){
                         break;
                     }else if(step==GameConstants.WINNING_LENGTH-1){
                         return true;
                     }
                 }
             } continue;
+        }
+        return false;
+    }
+
+    public static boolean isWinningMove(int x, int y, int[][] tiles) {
+        if ((x == -1 || y == -1) || (tiles[x][y] == 0)) return false;
+        
+        for (int dirIndex = 0; dirIndex < GameConstants.INDICES.length; dirIndex++) {
+            int count = 1;
+            
+            // Vorwärts prüfen
+            for (int step = 1; step < GameConstants.WINNING_LENGTH; step++) {
+                int newX = x + GameConstants.INDICES[dirIndex][0] * step;
+                int newY = y + GameConstants.INDICES[dirIndex][1] * step;
+                
+                if (newX < 0 || newX >= GameConstants.COLUMNS || 
+                    newY < 0 || newY >= GameConstants.ROWS ||
+                    tiles[x][y] != tiles[newX][newY]) {
+                    break;
+                }
+                count++;
+            }
+            
+            // Rückwärts prüfen
+            for (int step = 1; step < GameConstants.WINNING_LENGTH; step++) {
+                int newX = x - GameConstants.INDICES[dirIndex][0] * step;
+                int newY = y - GameConstants.INDICES[dirIndex][1] * step;
+                
+                if (newX < 0 || newX >= GameConstants.COLUMNS || 
+                    newY < 0 || newY >= GameConstants.ROWS ||
+                    tiles[x][y] != tiles[newX][newY]) {
+                    break;
+                }
+                count++;
+            }
+            
+            if (count >= GameConstants.WINNING_LENGTH) {
+                return true;
+            }
         }
         return false;
     }

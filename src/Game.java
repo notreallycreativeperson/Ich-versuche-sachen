@@ -95,7 +95,7 @@ public class Game implements Startable {
 
     static class Fast extends PvE {
         public Fast() {
-            super(new PlayerHuman("Spieler 1"), new PlayerCompetent(6), new Bord(true));
+            super(new PlayerHuman("Spieler 1"), new PlayerCompetent(12), new Bord(true));
         }
     }
 
