@@ -1,4 +1,4 @@
-public abstract class Game implements Startable {
+public class Game implements Startable {
     protected Player player1;
     protected Player player2;
     public Bord bord;
@@ -10,6 +10,12 @@ public abstract class Game implements Startable {
 
     Game(Bord bord) {
         this.bord = bord;
+    }
+
+    Game(Player player1, Player player2, boolean isMaxTurn) {
+        this.player1 = player1;
+        this.player2 = player2;
+        bord = new Bord(isMaxTurn);
     }
 
     public void start() {

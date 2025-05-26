@@ -6,13 +6,13 @@ public class MiniMax {
         this.eval=eval;
     }
 
-    public int miniMax(int[][] tiles, int depth, int alpha, int beta, boolean isMaxTurn, boolean isScore) {
+    public int miniMax(Bord bord, int depth, int alpha, int beta, boolean isScore) {
         if (depth == 0) {
-            return eval.evaluate(tiles);
+            return eval.evaluate(bord.getTiles());
         }
-        if (Bord.isWon(tiles)){
+        if (bord.isWinningMove()){
             if (isScore){
-                return (isMaxTurn?Integer.MIN_VALUE:Integer.MAX_VALUE);
+                return (bord.isMaxTurn?Integer.MIN_VALUE:Integer.MAX_VALUE);
             }
         }
 
@@ -20,14 +20,13 @@ public class MiniMax {
         int bestScore;
         int bestMove = -1;
 
-        bestScore = (isMaxTurn ? -1000000 : 100000);
-            for (int i = 0; i < 7; i++) {
-                if (tiles[i][5] == 0) {
-                    int row = Bord.getRow(tiles, i);
-                    tiles[i][row] = (isMaxTurn ? 1 : -1);
-                    int score = miniMax(tiles, depth - 1, alpha, beta, !isMaxTurn, true);
-                    tiles[i][row] = 0;
-                    if (isMaxTurn) {
+        bestScore = (bord.isMaxTurn ? -1000000 : 100000);
+            for (int i :GameConstants.EXPLORE_ORDER) {
+                if (bord.getTiles()[i][5] == 0) {
+                    bord.move(i);
+                    int score = miniMax(bord.clone(), depth - 1, alpha, beta, true);
+                    bord.unMove();
+                    if (bord.isMaxTurn) {
                         if (score > bestScore) {
                             bestScore = score;
                             bestMove = i;

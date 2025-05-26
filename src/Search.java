@@ -11,11 +11,10 @@ public class Search {
     }
 
     public int getBestMove(Bord bord){
-        return minimax.miniMax(bord.getTiles(),
+        return minimax.miniMax(bord,
                 depth,
                 Integer.MIN_VALUE,
                 Integer.MAX_VALUE,
-                bord.isMaxTurn,
                 false);
     }
 

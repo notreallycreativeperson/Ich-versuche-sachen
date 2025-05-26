@@ -23,7 +23,7 @@ abstract class AbstractEvaluatorLines implements Evaluator {
             for (int j = 0; j < tiles[0].length; j++) {
                 if (tiles[i][j] != 0) {
                     for (int k = 0; k < 4; k++) {
-                        if (Bord.directions[i][j][k]) {
+                        if (GameConstants.directions[i][j][k]) {
                             eval += evaluateLine(tiles, i, j, k);
                         }
                     }
@@ -43,8 +43,8 @@ class EvaluatorLinesSimple extends AbstractEvaluatorLines {
     protected int evaluateLine(int[][] tiles, int i, int j, int k) {
         int evalTemp = tiles[i][j];
         for (int l = 0; l < 3; l++) {
-            int ni = i + l * Bord.INDICES[k][0];
-            int nj = j + l * Bord.INDICES[k][1];
+            int ni = i + l * GameConstants.INDICES[k][0];
+            int nj = j + l * GameConstants.INDICES[k][1];
             if (tiles[i][j] == tiles[ni][nj]) {
                 evalTemp *= 2;
             }
@@ -59,8 +59,8 @@ class EvaluatorLinesStrong extends AbstractEvaluatorLines {
     protected int evaluateLine(int[][] tiles, int i, int j, int k) {
         int evalTemp = tiles[i][j];
         for (int l = 0; l < 3; l++) {
-            int ni = i + l * Bord.INDICES[k][0];
-            int nj = j + l * Bord.INDICES[k][1];
+            int ni = i + l * GameConstants.INDICES[k][0];
+            int nj = j + l * GameConstants.INDICES[k][1];
             if (tiles[i][j] == tiles[ni][nj]) {
                 evalTemp *= 2;
             } else if (evalTemp * tiles[ni][nj] < 0) {
