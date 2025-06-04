@@ -1,13 +1,13 @@
 public interface Evaluator {
-    int evaluate(int[][] tiles);
+    int evaluate(int[][] tiles,int x,int y);
 }
 
 record EvalHandler(Evaluator[] evaluators, int[] weights) {
 
-    public int evaluate(int[][] tiles) {
+    public int evaluate(int[][] tiles,int x,int y) {
         int eval = 0;
         for (int i = 0; i < evaluators.length; i++) {
-            eval += weights[i] * (evaluators[i].evaluate(tiles));
+            eval += weights[i] * (evaluators[i].evaluate(tiles,x,y));
         }
         return eval;
     }
@@ -17,7 +17,7 @@ record EvalHandler(Evaluator[] evaluators, int[] weights) {
 abstract class AbstractEvaluatorLines implements Evaluator {
 
     @Override
-    public int evaluate(int[][] tiles) {
+    public int evaluate(int[][] tiles,int x,int y) {
         int eval = 0;
         for (int i = 0; i < tiles.length; i++) {
             for (int j = 0; j < tiles[0].length; j++) {
@@ -90,13 +90,15 @@ class EvaluatorTiles implements Evaluator {
     public EvaluatorTiles() {
     }
 
-    public int evaluate(int[][] tiles){
+    public int evaluate(int[][] tiles,int x,int y) {
         int eval = 0;
-        for (int i = 0; i < tiles.length; i++) {
-            for (int j = 0; j < tiles[0].length; j++) {
-                if (tiles[i][j] != 0) {
-                    eval += tiles[i][j] * values[i][j];
-                }
+        for (int i = x-2; i < x+3; i++) {
+            if (i < 0) continue;
+            if (i > GameConstants.COLUMNS - 1) break;
+            for (int j = y - 2; j < y + 3; j++){
+                if (j < 0) continue;
+                if (j > GameConstants.ROWS - 1) break;
+                    eval += (tiles[i][j] * values[i][j]);
             }
         }
         return eval;

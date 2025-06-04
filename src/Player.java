@@ -29,29 +29,27 @@ class PlayerHuman implements Player {
 
 abstract class PlayerMinimax implements Player {
 
-    protected Search search;
+    public Search search;
 
     public static PlayerMinimax getBot() {
         return switch (Visual.getBot()) {
             case 1 -> new PlayerStrange();
             case 2 -> new PlayerStupid();
-            default -> new PlayerCompetent();
+            case 4 -> new PlayerItr();
+            default -> new PlayerCompetent(12);
         };
     }
-
-    @Override
-    public int getMove(Bord bord){
+    public int getMove(Bord bord) {
         return search.getBestMove(bord);
     }
-
 }
 
 class PlayerCompetent extends PlayerMinimax{
 
-    final Evaluator[] evaluators = {new EvaluatorLinesStrong(), new EvaluatorTiles()};
-    final int[] weights = {2, 1};
+    final Evaluator[] evaluators = {};
+    final int[] weights = {};
 
-    PlayerCompetent(){
+    PlayerCompetent() {
         EvalHandler eval = new EvalHandler(evaluators, weights);
         search = new Search(eval, 20);
     }
@@ -60,6 +58,20 @@ class PlayerCompetent extends PlayerMinimax{
     PlayerCompetent(int depth) {
         EvalHandler eval = new EvalHandler(evaluators, weights);
         search = new Search(eval, depth);
+    }
+
+
+}
+
+class PlayerItr extends PlayerCompetent {
+
+    PlayerItr(){
+        super(12);
+    }
+
+    @Override
+    public int getMove(Bord bord) {
+        return super.search.getBestMoveItr(bord);
     }
 }
 
@@ -96,6 +108,3 @@ class PlayerStupid extends PlayerMinimax {
         }
     }
 }
-
-
-

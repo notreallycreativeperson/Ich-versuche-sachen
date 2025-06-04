@@ -1,3 +1,5 @@
+import java.util.HashMap;
+
 public class MiniMax {
 
     final EvalHandler eval;
@@ -6,14 +8,16 @@ public class MiniMax {
         this.eval=eval;
     }
 
-    public int miniMax(int[][] tiles, int depth, int alpha, int beta,boolean isMaxTurn,int[][] lastMoves, boolean isScore) {
-        if (depth == 0) {
-            return eval.evaluate(tiles);
+    public int miniMax(int[][] tiles, int depth, int alpha, int beta, boolean isMaxTurn, boolean isScore, int lastmoveX, int lastmoveY, HashMap<Long,Entry> transPositionTable,long hashLast) {
+        Entry entry=transPositionTable.get(hashLast);
+        if (entry != null && entry.depth == depth) {
+            return entry.score;
         }
-        if (Bord.isWinningMove(lastMoves[depth+1][0],lastMoves[depth+1][1],tiles)){
-            if (isScore){
-                return (isMaxTurn?Integer.MIN_VALUE:Integer.MAX_VALUE);
-            }
+        if (Bord.isWinningMove(lastmoveX, lastmoveY, tiles) && isScore) {
+            return (isMaxTurn ? Integer.MIN_VALUE : Integer.MAX_VALUE);
+        }
+        if (depth == 0) {
+            return eval.evaluate(tiles,lastmoveX,lastmoveY);
         }
 
 
@@ -21,13 +25,17 @@ public class MiniMax {
         int bestMove = -1;
 
         bestScore = (isMaxTurn ? Integer.MIN_VALUE : Integer.MAX_VALUE);
-            for (int i :GameConstants.EXPLORE_ORDER) {
+            for (int i :Search.exploreOrder) {
                 if (tiles[i][5] == 0) {
-                    lastMoves[depth][0] = i;
-                    lastMoves[depth][1] = Bord.getRow(tiles, i);
-                    tiles[i][lastMoves[depth][1]] = (isMaxTurn ? GameConstants.PLAYER_MAX : GameConstants.PLAYER_MIN);
-                    int score = miniMax(tiles, depth - 1, alpha, beta, !isMaxTurn, lastMoves, true);
-                    tiles[i][lastMoves[depth][1]] = 0;
+                    int row = Bord.getRow(tiles, i);
+                    tiles[i][row] = (isMaxTurn ? GameConstants.PLAYER_MAX : GameConstants.PLAYER_MIN);
+                    long hash=Bord.hash(tiles);
+                    int score = miniMax(tiles, depth - 1, alpha, beta, !isMaxTurn, true,i,row,transPositionTable,hash);
+                    transPositionTable.put(hash,new Entry(score,depth));
+                    if(!isScore){
+                        Search.logScore(i,score);
+                    }
+                    tiles[i][row] = 0;
                     if (isMaxTurn) {
                         if (score > bestScore) {
                             bestScore = score;
