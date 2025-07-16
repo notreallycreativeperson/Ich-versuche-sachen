@@ -5,7 +5,6 @@ public class Search {
     final EvalHandler eval;
     final MiniMax minimax;
     static int[] scores = new int[7];
-    static int[] exploreOrder = new int[]{3,4,2,5,1,6,0};
     HashMap<Long,Entry> transPositionTable = new HashMap<>();
     final int depth;
 
@@ -39,10 +38,10 @@ public class Search {
     private static void sortOrder(){
         for (int i = 1; i < 6; i++) {
             for (int j = i; j < 7; j++) {
-                if (scores[exploreOrder[j-1]] < scores[exploreOrder[j]]) {
-                    int temp =exploreOrder[j-1];
-                    exploreOrder[j-1]=exploreOrder[j];
-                    exploreOrder[j]=temp;
+                if (scores[GameConstants.EXPLORE_ORDER[j-1]] < scores[GameConstants.EXPLORE_ORDER[j]]) {
+                    int temp =GameConstants.EXPLORE_ORDER[j-1];
+                    GameConstants.EXPLORE_ORDER[j-1]=GameConstants.EXPLORE_ORDER[j];
+                    GameConstants.EXPLORE_ORDER[j]=temp;
                 }
 
             }

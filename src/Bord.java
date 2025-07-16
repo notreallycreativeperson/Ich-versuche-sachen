@@ -22,7 +22,7 @@ public class Bord {
         initializeMoves();
     }
 
-    Bord(int[] moves, int tiles[][], int moveCount, boolean isMaxTurn, int[][] last20Moves){
+    Bord(int[] moves, int[][] tiles, int moveCount, boolean isMaxTurn, int[][] last20Moves){
         this.tiles = tiles.clone();
         this.moves = moves.clone();
         this.moveCount = moveCount;
@@ -121,7 +121,7 @@ public class Bord {
         int row = getRow(move);
         if (row < 0){
             throw new IllegalArgumentException("Column " + move + " is already full.");
-        };
+        }
 
         tiles[move][row] = getPlayer(isMaxTurn);
         moves[moveCount] = move;
@@ -261,9 +261,6 @@ public class Bord {
         return hash;
     }
 
-    public Bord clone() {
-        return new Bord(moves, tiles, moveCount, isMaxTurn, last20Moves);
-    }
 }
 
 class Entry {

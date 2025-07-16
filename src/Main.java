@@ -3,7 +3,7 @@ public class Main {
 
 
     public static void main(String[] args) {
-        GameConstants.init();
+        GameConstants.init(false);
         Startable startable = setMode();
         startable.start();
     }

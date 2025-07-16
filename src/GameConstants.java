@@ -1,32 +1,48 @@
 public class GameConstants {
+
     // Constants for board dimensions
-    public static final int COLUMNS = 7;
-    public static final int ROWS = 6;
-    public static final int MAX_MOVES = COLUMNS * ROWS;
-    public static final int WINNING_LENGTH = 4;
-    public static final int[] EXPLORE_ORDER = {3,4,2,5,1,6,0};
-    public static final long START_TIME = System.currentTimeMillis();
+    public static final int COLUMNS;
+    public static final int ROWS;
+    public static final int MAX_MOVES;
+    public static final int WINNING_LENGTH;
+    public static final int[] EXPLORE_ORDER;
 
     // Player constants
-    public static final int EMPTY = 0;
-    public static final int PLAYER_MAX = 1;
-    public static final int PLAYER_MIN = -1;
-    public static final int[][] INDICES = {
-            {1, 0},
-            {1, 1},
-            {0, 1},
-            {-1, 1},
-            {-1, 0},
-            {-1, -1},
-            {0,-1},
-            {1,-1},
+    public static final int EMPTY;
+    public static final int PLAYER_MAX;
+    public static final int PLAYER_MIN;
 
-    };
-
+    // Misc constants
+    public static final int[][] INDICES;
     public static int[][] HASH_VALUES;
-    public static int[] PRIMES = new int[]{3,5,7,11,13,17,19,23,29,31,37,41,43,47};
+    public static int[] PRIMES;
+    static final boolean[][][] directions;
+    public static boolean DEBUG;
 
-    static final boolean[][][] directions = new boolean[COLUMNS][ROWS][INDICES.length];
+
+    static {
+        PRIMES = new int[]{3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47};
+        EXPLORE_ORDER = new int[]{3, 4, 2, 5, 1, 6, 0};
+        COLUMNS = 7;
+        ROWS = 6;
+        MAX_MOVES = COLUMNS * ROWS;
+        WINNING_LENGTH = 4;
+        EMPTY = 0;
+        PLAYER_MAX = 1;
+        PLAYER_MIN = -1;
+        INDICES = new int[][]{
+                {1, 0},
+                {1, 1},
+                {0, 1},
+                {-1, 1},
+                {-1, 0},
+                {-1, -1},
+                {0, -1},
+                {1, -1},
+
+        };
+        directions = new boolean[COLUMNS][ROWS][INDICES.length];
+    }
 
     private static void setDirections() {
         // Only initialize if not already set
@@ -38,7 +54,7 @@ public class GameConstants {
                 directions[i][j][2] = j < ROWS - WINNING_LENGTH + 1;
                 directions[i][j][3] = (i > WINNING_LENGTH - 2 && j < ROWS - WINNING_LENGTH + 1);
                 directions[i][j][4] = j > COLUMNS - WINNING_LENGTH + 1;
-                directions[i][j][5] = i>COLUMNS-WINNING_LENGTH+1 && j > ROWS - WINNING_LENGTH+1;
+                directions[i][j][5] = i > COLUMNS-WINNING_LENGTH+1 && j > ROWS - WINNING_LENGTH+1;
                 directions[i][j][6] = j > ROWS - WINNING_LENGTH+1;
                 directions[i][j][7] = i < COLUMNS-WINNING_LENGTH+1&&j > ROWS - WINNING_LENGTH+1;
             }
@@ -55,9 +71,10 @@ public class GameConstants {
     }
 
 
-    public static void init() {
+    public static void init(boolean debug) {
         setDirections();
         setHashValues();
+        DEBUG = debug;
     }
 
 }
