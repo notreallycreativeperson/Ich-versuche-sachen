@@ -52,7 +52,7 @@ public class GameConstants {
                 directions[col][row][0] = col < COLUMNS - WINNING_LENGTH;
                 directions[col][row][1] = col < COLUMNS - WINNING_LENGTH && row < ROWS - WINNING_LENGTH;
                 directions[col][row][2] = row < ROWS - WINNING_LENGTH;
-                directions[col][row][3] = col > WINNING_LENGTH && row < ROWS - WINNING_LENGTH;
+                directions[col][row][3] = col > COLUMNS - WINNING_LENGTH && row < ROWS - WINNING_LENGTH;
                 directions[col][row][4] = col > COLUMNS - WINNING_LENGTH;
                 directions[col][row][5] = col > COLUMNS-WINNING_LENGTH && row > ROWS - WINNING_LENGTH;
                 directions[col][row][6] = row > ROWS - WINNING_LENGTH;
