@@ -47,16 +47,16 @@ public class GameConstants {
     private static void setDirections() {
         // Only initialize if not already set
         if (directions[0][0][0]) return;
-        for (int i = 0; i < COLUMNS; i++) {
-            for (int j = 0; j < ROWS; j++) {
-                directions[i][j][0] = i < COLUMNS - WINNING_LENGTH + 1;
-                directions[i][j][1] = (i < COLUMNS - WINNING_LENGTH + 1 && j < ROWS - WINNING_LENGTH + 1);
-                directions[i][j][2] = j < ROWS - WINNING_LENGTH + 1;
-                directions[i][j][3] = (i > WINNING_LENGTH - 2 && j < ROWS - WINNING_LENGTH + 1);
-                directions[i][j][4] = j > COLUMNS - WINNING_LENGTH + 1;
-                directions[i][j][5] = i > COLUMNS-WINNING_LENGTH+1 && j > ROWS - WINNING_LENGTH+1;
-                directions[i][j][6] = j > ROWS - WINNING_LENGTH+1;
-                directions[i][j][7] = i < COLUMNS-WINNING_LENGTH+1&&j > ROWS - WINNING_LENGTH+1;
+        for (int col = 0; col < COLUMNS; col++) {
+            for (int row = 0; row < ROWS; row++) {
+                directions[col][row][0] = col < COLUMNS - WINNING_LENGTH;
+                directions[col][row][1] = col < COLUMNS - WINNING_LENGTH && row < ROWS - WINNING_LENGTH;
+                directions[col][row][2] = row < ROWS - WINNING_LENGTH;
+                directions[col][row][3] = col > WINNING_LENGTH && row < ROWS - WINNING_LENGTH;
+                directions[col][row][4] = col > COLUMNS - WINNING_LENGTH;
+                directions[col][row][5] = col > COLUMNS-WINNING_LENGTH && row > ROWS - WINNING_LENGTH;
+                directions[col][row][6] = row > ROWS - WINNING_LENGTH;
+                directions[col][row][7] = col < COLUMNS-WINNING_LENGTH && row > ROWS - WINNING_LENGTH;
             }
         }
     }
