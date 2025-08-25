@@ -12,9 +12,11 @@ public class MiniMax {
         if (Bord.isWinningMove(lastmoveX, lastmoveY, tiles) && isScore) {
             return (isMaxTurn ? Integer.MIN_VALUE : Integer.MAX_VALUE);
         }
-        Entry entry=transPositionTable.get(hashLast);
-        if (entry != null && entry.depth == depth) {
-            return entry.score;
+        if(transPositionTable.containsKey(hashLast)) {
+            Entry entry = transPositionTable.get(hashLast);
+            if(entry.depth==depth+1) {
+                return entry.score;
+            }
         }
         if (depth == 0) {
             return eval.evaluate(tiles,lastmoveX,lastmoveY);
@@ -47,6 +49,7 @@ public class MiniMax {
                         beta = Math.min(beta, score);
                     }
                     if (beta <= alpha) {
+                        Info.logPrune(20);
                         break;
                     }
                 }

@@ -12,6 +12,11 @@ class Visual {
         do{
             out.println("In welchem Modus möchtest du spielen?");
             out.println("1 für schnelles spiel");
+            out.println("2 für PvP");
+            out.println("3 für EvE");
+            out.println("4 für Tournament");
+            out.println("5 für Test");
+            out.println("6 für PvE");
             try {
                 mode = Integer.parseInt(scanner.next());
             } catch (Exception e) {
@@ -72,10 +77,10 @@ class Visual {
     }
 
     public static void displayBord(Bord bord) {
-        displayBord(bord.getTiles());
+        displayBord(bord.getTiles(),bord.getLast2Moves());
     }
 
-    public static void displayBord(int[][] bord) {
+    public static void displayBord(int[][] bord,int[][] last2Moves) {
         for (int i = 1; i < 8; i++) {
             out.print(" " + i + "  ");
         }
@@ -85,16 +90,25 @@ class Visual {
                 out.print("[");
                 switch (bord[j][i]) {
                     case 1: {
-                        out.print("x");
+                        if (last2Moves[1][0]==j&&last2Moves[1][1]==i){
+                            out.print(GameConstants.ConsoleColors.RED_BOLD+GameConstants.ConsoleColors.WHITE_BACKGROUND+"X");
+                        }else{
+                            out.print(GameConstants.ConsoleColors.RED+"x");
+                        }
                         break;
                     }
                     case -1: {
-                        out.print("o");
+                        if (last2Moves[0][0]==j&&last2Moves[0][1]==i){
+                            out.print(GameConstants.ConsoleColors.YELLOW_BOLD+GameConstants.ConsoleColors.WHITE_BACKGROUND+"O");
+                        }else{
+                            out.print(GameConstants.ConsoleColors.YELLOW_BOLD+"o");
+                        }
                         break;
                     }
                     default:
                         out.print(" ");
                 }
+                out.print(GameConstants.ConsoleColors.RESET);
                 out.print("] ");
             }
             out.println();

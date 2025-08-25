@@ -35,8 +35,7 @@ abstract class PlayerMinimax implements Player {
         return switch (Visual.getBot()) {
             case 1 -> new PlayerStrange();
             case 2 -> new PlayerStupid();
-            case 4 -> new PlayerItr();
-            default -> new PlayerCompetent(12);
+            default -> new PlayerCompetent(20);
         };
     }
     public int getMove(Bord bord) {
@@ -46,8 +45,8 @@ abstract class PlayerMinimax implements Player {
 
 class PlayerCompetent extends PlayerMinimax{
 
-    final Evaluator[] evaluators = {};
-    final int[] weights = {};
+    final Evaluator[] evaluators = {new EvaluatorTiles(),new EvaluatorLinesSimple()};
+    final int[] weights = {2,1};
 
     PlayerCompetent() {
         EvalHandler eval = new EvalHandler(evaluators, weights);
@@ -61,18 +60,6 @@ class PlayerCompetent extends PlayerMinimax{
     }
 
 
-}
-
-class PlayerItr extends PlayerCompetent {
-
-    PlayerItr(){
-        super(12);
-    }
-
-    @Override
-    public int getMove(Bord bord) {
-        return super.search.getBestMoveItr(bord);
-    }
 }
 
 class PlayerStrange extends PlayerMinimax {

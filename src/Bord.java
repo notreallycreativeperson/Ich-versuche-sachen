@@ -1,47 +1,29 @@
-import java.util.Arrays;
-
 @SuppressWarnings("SameParameterValue")
 public class Bord {
 
-    private int[][] tiles;
+    private int[][] tiles = new int[GameConstants.COLUMNS][GameConstants.ROWS];;
     boolean isMaxTurn;
-    final int[] moves;
-    int moveCount;
-    int[][] last20Moves = new int[20][2];
-    private final int lastLength = last20Moves.length;
+    int[][] last2Moves = new int[2][2];
 
     public int[][] getTiles() {
         return tiles;
     }
 
     Bord() {
-        initializeBord();
         isMaxTurn = Visual.whoStarts();
-        moves = new int[GameConstants.MAX_MOVES];
-        moveCount = 0;
-        initializeMoves();
     }
 
     Bord(int[] moves, int[][] tiles, int moveCount, boolean isMaxTurn, int[][] last20Moves){
         this.tiles = tiles.clone();
-        this.moves = moves.clone();
-        this.moveCount = moveCount;
         this.isMaxTurn = isMaxTurn;
-        this.last20Moves = last20Moves.clone();
     }
 
     @SuppressWarnings("SameParameterValue")
     Bord(boolean isMaxTurn) {
-        initializeBord();
         this.isMaxTurn = isMaxTurn;
-        moves = new int[GameConstants.MAX_MOVES];
-        moveCount = 0;
-        initializeMoves();
     }
 
     Bord(int[] moves) {
-        initializeBord();
-        this.moves = moves;
         this.isMaxTurn = true; // Initialize isMaxTurn
         for (int move : moves) {
             if (move == -1) break;
@@ -53,8 +35,6 @@ public class Bord {
                 throw new IllegalArgumentException("Column " + move + " is already full.");
             }
             tiles[move][row] = getPlayer(isMaxTurn);
-            addMove(move, row);
-            moveCount++;
             switchPlayer();
         }
 
@@ -124,9 +104,8 @@ public class Bord {
         }
 
         tiles[move][row] = getPlayer(isMaxTurn);
-        moves[moveCount] = move;
-        addMove(move, row);
-        moveCount++;
+        last2Moves[(getPlayer(isMaxTurn)+1)/2][0] =move;
+        last2Moves[(getPlayer(isMaxTurn)+1)/2][1] =row;
         switchPlayer();
     }
 
@@ -148,22 +127,6 @@ public class Bord {
         return -1; // Column is full
     }
 
-    private void addMove(int move, int row) {
-        for (int i = 0; i < lastLength-1; i++) { //todo reihenfolge umdrehen, so dass 0 der letzte move ist
-            last20Moves[i+1]=last20Moves[i];
-        }
-        last20Moves[0][0] = move;
-        last20Moves[0][1] = row;
-    }
-
-    private void removeMove() {
-        for (int i = 0; i < lastLength-1; i++) {
-            last20Moves[i] = last20Moves[i+1];
-        }
-        last20Moves[lastLength - 1][0] = -1;
-        last20Moves[lastLength - 1][1] = -1;
-    }
-
     private int getPlayer(boolean isMaxTurn) {
         return isMaxTurn ? GameConstants.PLAYER_MAX : GameConstants.PLAYER_MIN;
     }
@@ -181,34 +144,6 @@ public class Bord {
 
     public boolean check() {
         return check(tiles);
-    }
-
-    @SuppressWarnings("unused")
-    public void unMove() {
-        if (last20Moves[0][0]==-1) {
-            tiles[moves[moveCount-1]][getRow(moves[moveCount-1])]=0;
-        }else {
-            tiles[last20Moves[0][0]][last20Moves[0][1]] = 0;
-        }
-        switchPlayer();
-        moveCount--;
-        moves[moveCount] = -1;
-    }
-
-    private void initializeLast20Moves() {
-        for (int i = 0; i < last20Moves.length; i++) {
-            last20Moves[i][0] = -1;
-            last20Moves[i][1] = -1;
-        }
-    }
-
-    private void initializeMoves() {
-        Arrays.fill(moves, -1);
-    }
-
-    private void initializeBord() {
-        tiles = new int[GameConstants.COLUMNS][GameConstants.ROWS];
-        initializeLast20Moves();
     }
 
     public static boolean isWinningMove(int x, int y, int[][] tiles) {
@@ -254,11 +189,15 @@ public class Bord {
         long hash=0;
         for(int i = 0; i < GameConstants.COLUMNS; i++){
             for(int j = GameConstants.ROWS-1; j >=0 ; j--){
-                hash+=tiles[i][j]*GameConstants.HASH_VALUES[i][j];
+                hash+=(long)tiles[i][j]*GameConstants.HASH_VALUES[i][j];
             }
 
         }
         return hash;
+    }
+
+    public int[][] getLast2Moves() {
+        return last2Moves;
     }
 
 }

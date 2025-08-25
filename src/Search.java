@@ -21,16 +21,6 @@ public class Search {
         return i;
     }
 
-    public int getBestMoveItr(Bord bord) {
-        int move = 3;
-        for (int i = 1; i <= depth; i++){
-            move = minimax.miniMax(bord.getTiles(), depth, Integer.MIN_VALUE, Integer.MAX_VALUE, bord.isMaxTurn, false,0,0,transPositionTable,0);
-            sortOrder();
-        }
-        transPositionTable.clear();
-        return move;
-    }
-
     public static void logScore(int move, int score){
         scores[move]=score;
     }

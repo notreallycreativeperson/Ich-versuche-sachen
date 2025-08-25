@@ -19,15 +19,9 @@ abstract class AbstractEvaluatorLines implements Evaluator {
     @Override
     public int evaluate(int[][] tiles,int x,int y) {
         int eval = 0;
-        for (int i = 0; i < tiles.length; i++) {
-            for (int j = 0; j < tiles[0].length; j++) {
-                if (tiles[i][j] != 0) {
-                    for (int k = 0; k < 4; k++) {
-                        if (GameConstants.directions[i][j][k]) {
-                            eval += evaluateLine(tiles, i, j, k);
-                        }
-                    }
-                }
+        for (int k = 0; k < 8; k++) {
+            if (GameConstants.directions[x][y][k]) {
+                eval += evaluateLine(tiles, x, y, k);
             }
         }
         return eval;

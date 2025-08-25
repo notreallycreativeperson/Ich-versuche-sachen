@@ -2,7 +2,6 @@ public class Game implements Startable {
     protected Player player1;
     protected Player player2;
     public Bord bord;
-    private int rev = 0;
 
     Game() {
         bord = new Bord();
@@ -32,9 +31,9 @@ public class Game implements Startable {
 
     protected int game() {
 
-        while (!bord.check() && rev <= 4) {
+        while (!bord.check()) {
             int move = -1;
-            rev = 0;
+            int rev = 0;
             while (bord.getHumanRow(move) < 0 && rev <= 4) {
                 if (bord.isMaxTurn) {
                     System.out.println("Spieler 1:");
@@ -78,6 +77,12 @@ public class Game implements Startable {
             player1 = PlayerMinimax.getBot();
             player2 = PlayerMinimax.getBot();
         }
+
+        EvE(Player player1, Player player2, boolean isMaxTurn) {
+            this.player1 = player1;
+            this.player2 = player2;
+            bord = new Bord(isMaxTurn);
+        }
     }
 
     static class PvE extends Game {
@@ -95,7 +100,10 @@ public class Game implements Startable {
 
     static class Fast extends PvE {
         public Fast() {
-            super(new PlayerHuman("Spieler 1"), new PlayerCompetent(12), new Bord(true));
+            super(new PlayerHuman("Spieler 1"), new PlayerCompetent(13), new Bord(true));
+        }
+        public Fast(int depth) {
+            super(new PlayerHuman("Spieler 1"), new PlayerCompetent(depth), new Bord(true));
         }
     }
 

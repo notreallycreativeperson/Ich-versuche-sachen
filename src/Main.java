@@ -14,7 +14,7 @@ public class Main {
             case 2 -> new Game.PvP();
             case 3 -> new Game.EvE();
             case 4 -> new TournamentHandler();
-            case 5 -> new Game(new PlayerCompetent(8), new PlayerCompetent(8),true);
+            case 5 -> new Game(new PlayerCompetent(10), new PlayerCompetent(10),true);
             default -> new Game.PvE();
         };
     }
