@@ -1,7 +1,7 @@
 @SuppressWarnings("SameParameterValue")
 public class Bord {
 
-    private int[][] tiles = new int[GameConstants.COLUMNS][GameConstants.ROWS];;
+    private int[][] tiles = new int[GameConstants.COLUMNS][GameConstants.ROWS];
     boolean isMaxTurn;
     int[][] last2Moves = new int[2][2];
 
@@ -202,12 +202,5 @@ public class Bord {
 
 }
 
-class Entry {
-    int score;
-    int depth;
-
-    Entry(int score, int depth) {
-        this.score = score;
-        this.depth = depth;
-    }
+record Entry(int score, int depth) {
 }

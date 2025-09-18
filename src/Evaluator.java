@@ -92,7 +92,7 @@ class EvaluatorTiles implements Evaluator {
             for (int j = y - 2; j < y + 3; j++){
                 if (j < 0) continue;
                 if (j > GameConstants.ROWS - 1) break;
-                    eval += (tiles[i][j] * values[i][j]);
+                eval += (tiles[i][j] * values[i][j]);
             }
         }
         return eval;

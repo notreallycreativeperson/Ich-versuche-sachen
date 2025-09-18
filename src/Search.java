@@ -3,7 +3,7 @@ import java.util.HashMap;
 public class Search {
 
     final EvalHandler eval;
-    final MiniMax minimax;
+    final MiniMaxBest minimax;
     static int[] scores = new int[7];
     HashMap<Long,Entry> transPositionTable = new HashMap<>();
     final int depth;
@@ -12,7 +12,7 @@ public class Search {
         this.depth = depth;
         this.eval=eval;
 
-        minimax = new MiniMax(eval);
+        minimax = new MiniMaxBest(eval);
     }
 
     public int getBestMove(Bord bord){
