@@ -1,7 +1,5 @@
 public class Main {
 
-
-
     public static void main(String[] args) {
         GameConstants.init(false);
         Startable startable = setMode();
@@ -13,8 +11,7 @@ public class Main {
             case 1 -> new Game.Fast();
             case 2 -> new Game.PvP();
             case 3 -> new Game.EvE();
-            case 4 -> new TournamentHandler();
-            case 5 -> new Game(new PlayerCompetent(10), new PlayerCompetent(10),true);
+            case 4 -> new Game(new PlayerCompetent(11), new PlayerCompetent(11),true);
             default -> new Game.PvE();
         };
     }

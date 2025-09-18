@@ -7,6 +7,7 @@ public class Debug {
             if(new Game.EvE(new PlayerCompetent(i),new PlayerCompetent(i),true).game()==-1){
                 break;
             }
+            Info.printPrunes();
         }
     }
 

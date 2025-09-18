@@ -1,9 +1,12 @@
-@SuppressWarnings("SameParameterValue")
+/*
+Die Klasse Bord enthält alle nötigen Informationen, um das Spiel zu beschreiben.
+Des Weiteren ist sie auch für Veränderungen an den in der Klasse enthaltenen Daten verantwortlich.
+ */
 public class Bord {
 
-    private int[][] tiles = new int[GameConstants.COLUMNS][GameConstants.ROWS];
-    boolean isMaxTurn;
-    int[][] last2Moves = new int[2][2];
+    private int[][] tiles = new int[GameConstants.COLUMNS][GameConstants.ROWS]; //Das Spielbrett an sich
+    boolean isMaxTurn; //Ist es der Zug des maximierenden Spielers
+    int[][] last2Moves = new int[2][2]; //Letzten 2 Züge; Relevant für das Highlighten in der "Gui"- Klasse
 
     public int[][] getTiles() {
         return tiles;
@@ -37,7 +40,6 @@ public class Bord {
             tiles[move][row] = getPlayer(isMaxTurn);
             switchPlayer();
         }
-
     }
 
 
@@ -149,10 +151,9 @@ public class Bord {
     public static boolean isWinningMove(int x, int y, int[][] tiles) {
         if ((x == -1 || y == -1) || (tiles[x][y] == 0)) return false;
         
-        for (int dirIndex = 0; dirIndex < GameConstants.INDICES.length/2; dirIndex++) {
+        for (int dirIndex = 0; dirIndex < GameConstants.INDICES.length; dirIndex++) {
             int count = 1;
-            
-            // Vorwärts prüfen
+
             for (int step = 1; step < GameConstants.WINNING_LENGTH; step++) {
                 int newX = x + GameConstants.INDICES[dirIndex][0] * step;
                 int newY = y + GameConstants.INDICES[dirIndex][1] * step;
@@ -164,21 +165,8 @@ public class Bord {
                 }
                 count++;
             }
-            
-            // Rückwärts prüfen
-            for (int step = 1; step < GameConstants.WINNING_LENGTH; step++) {
-                int newX = x - GameConstants.INDICES[dirIndex][0] * step;
-                int newY = y - GameConstants.INDICES[dirIndex][1] * step;
-                
-                if (newX < 0 || newX >= GameConstants.COLUMNS || 
-                    newY < 0 || newY >= GameConstants.ROWS ||
-                    tiles[x][y] != tiles[newX][newY]) {
-                    break;
-                }
-                count++;
-            }
 
-            if (count >= GameConstants.WINNING_LENGTH) {
+            if (count == GameConstants.WINNING_LENGTH) {
                 return true;
             }
         }
@@ -186,21 +174,11 @@ public class Bord {
     }
 
     public static long hash(int[][] tiles) {
-        long hash=0;
-        for(int i = 0; i < GameConstants.COLUMNS; i++){
-            for(int j = GameConstants.ROWS-1; j >=0 ; j--){
-                hash+=(long)tiles[i][j]*GameConstants.HASH_VALUES[i][j];
-            }
-
-        }
-        return hash;
+        return java.util.Arrays.deepHashCode(tiles);
     }
 
     public int[][] getLast2Moves() {
         return last2Moves;
     }
 
-}
-
-record Entry(int score, int depth) {
 }

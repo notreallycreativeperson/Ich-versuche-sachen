@@ -14,9 +14,8 @@ class Visual {
             out.println("1 für schnelles spiel");
             out.println("2 für PvP");
             out.println("3 für EvE");
-            out.println("4 für Tournament");
-            out.println("5 für Test");
-            out.println("6 für PvE");
+            out.println("4 für Test");
+            out.println("5 für PvE");
             try {
                 mode = Integer.parseInt(scanner.next());
             } catch (Exception e) {
@@ -93,7 +92,7 @@ class Visual {
                         if (last2Moves[1][0]==j&&last2Moves[1][1]==i){
                             out.print(GameConstants.ConsoleColors.RED_BOLD+GameConstants.ConsoleColors.WHITE_BACKGROUND+"X");
                         }else{
-                            out.print(GameConstants.ConsoleColors.RED+"x");
+                            out.print(GameConstants.ConsoleColors.RED_BOLD+"x");
                         }
                         break;
                     }
