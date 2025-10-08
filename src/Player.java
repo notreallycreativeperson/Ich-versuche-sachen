@@ -87,3 +87,7 @@ class PlayerStupid extends PlayerMinimax {
         }
     }
 }
+
+class PlayerBasic extends PlayerMinimax {
+
+}

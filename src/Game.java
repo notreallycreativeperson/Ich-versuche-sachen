@@ -22,35 +22,41 @@ public class Game implements Startable {
         int winner = game();
         if (winner < 1) {
             Visual.tie();
+            Info.printPrunes();
+            Info.printTime();
             return;
         }
 
         Visual.winner(winner);
+        Info.printPrunes();
+        Info.printTime();
 
     }
 
     protected int game() {
-
+        TimeWatcher.start();
         while (!bord.check()) {
-            int move = -1;
-            int rev = 0;
-            while (bord.getHumanRow(move) < 0 && rev <= 4) {
-                if (bord.isMaxTurn) {
-                    System.out.println("Spieler 1:");
-                    move = player1.getMove(bord);
-                } else {
-                    System.out.println("Spieler 2:");
-                    move = player2.getMove(bord);
-                }
-                rev++;
+            int move;
+            if (bord.isMaxTurn) {
+                TimeWatcher.start(1);
+                System.out.println("Spieler 1:");
+                move = player1.getMove(bord);
+                TimeWatcher.stop(1);
+            } else {
+                TimeWatcher.start(2);
+                System.out.println("Spieler 2:");
+                move = player2.getMove(bord);
+                TimeWatcher.stop(2);
             }
 
-            if (rev >= 4) {
-                return (bord.isMaxTurn ? 1 : 2);
+            Info.logTurns();
+
+            if (move==-1){
+                return -1;
             }
+
             bord.move(move);
             Visual.displayBord(bord);
-
         }
 
         if (Bord.isWon(bord.getTiles())) {
@@ -100,7 +106,7 @@ public class Game implements Startable {
 
     static class Fast extends PvE {
         public Fast() {
-            super(new PlayerHuman("Spieler 1"), new PlayerCompetent(13), new Bord(true));
+             super(new PlayerHuman("Spieler 1"), new PlayerCompetent(3), new Bord(true));
         }
         public Fast(int depth) {
             super(new PlayerHuman("Spieler 1"), new PlayerCompetent(depth), new Bord(true));
@@ -111,18 +117,6 @@ public class Game implements Startable {
         PvP() {
             setPlayer1(new PlayerHuman());
             setPlayer2(new PlayerHuman());
-        }
-    }
-
-    static class Turnament extends Game {
-        @Override
-        public void start() {
-
-        }
-
-        @Override
-        public int game() {
-            return 0;
         }
     }
 }

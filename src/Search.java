@@ -9,26 +9,27 @@ public class Search {
     final int depth;
 
     Search(EvalHandler eval, int depth) {
-        this(eval, depth, true, true);
+        this(eval, depth, true, true,true);
     }
 
-    Search(EvalHandler eval, int depth, boolean abp, boolean tpt) {
+    Search(EvalHandler eval, int depth, boolean abp, boolean tpt, boolean oso) {
         this.depth = depth;
         this.eval=eval;
 
-        minimax = new MiniMax(eval,abp,tpt);
+        minimax = new MiniMax(eval,abp,tpt,oso);
     }
 
     public int getBestMove(Bord bord){
-        int i = minimax.miniMax(bord.getTiles(), depth, Integer.MIN_VALUE, Integer.MAX_VALUE, bord.isMaxTurn, false, 0, 0, transPositionTable,0);
+        int i = minimax.miniMax(bord.getTiles(), depth, Integer.MIN_VALUE, Integer.MAX_VALUE, bord.isMaxTurn, false, 0, 0, transPositionTable,2);
         transPositionTable.clear();
         return i;
     }
 
-    public static void logScore(int move, int score){
-        scores[move]=score;
-    }
+//    public static void logScore(int move, int score){
+//        scores[move]=score;
+//    }
 
+/*
     private static void sortOrder(){
         for (int i = 1; i < 6; i++) {
             for (int j = i; j < 7; j++) {
@@ -42,4 +43,5 @@ public class Search {
 
         }
     }
+*/
 }
