@@ -1,4 +1,7 @@
-public class Game implements Startable {
+/**
+ * In der Game Klasse wird das Spiel gestartet und findet dort auch statt.
+ */
+public class Game {
     protected Player player1;
     protected Player player2;
     public Bord bord;
@@ -65,10 +68,6 @@ public class Game implements Startable {
         return -1;
     }
 
-    public void setBord(Bord bord) {
-        this.bord = bord;
-    }
-
     public void setPlayer2(Player player2) {
         this.player2 = player2;
     }
@@ -80,8 +79,8 @@ public class Game implements Startable {
     static class EvE extends Game {
 
         EvE() {
-            player1 = PlayerMinimax.getBot();
-            player2 = PlayerMinimax.getBot();
+            player1 = PlayerInhumane.getBot();
+            player2 = PlayerInhumane.getBot();
         }
 
         EvE(Player player1, Player player2, boolean isMaxTurn) {
@@ -94,10 +93,10 @@ public class Game implements Startable {
     static class PvE extends Game {
         public PvE() {
             setPlayer1(new PlayerHuman());
-            setPlayer2(PlayerMinimax.getBot());
+            setPlayer2(PlayerInhumane.getBot());
         }
 
-        public PvE(PlayerHuman player1, PlayerMinimax player2, Bord bord) {
+        public PvE(PlayerHuman player1, PlayerInhumane player2, Bord bord) {
             super(bord);
             setPlayer1(player1);
             setPlayer2(player2);
@@ -106,7 +105,7 @@ public class Game implements Startable {
 
     static class Fast extends PvE {
         public Fast() {
-             super(new PlayerHuman("Spieler 1"), new PlayerCompetent(3), new Bord(true));
+             super(new PlayerHuman("Spieler 1"), new PlayerCompetent(12), new Bord(true));
         }
         public Fast(int depth) {
             super(new PlayerHuman("Spieler 1"), new PlayerCompetent(depth), new Bord(true));

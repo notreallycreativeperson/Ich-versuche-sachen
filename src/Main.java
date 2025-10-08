@@ -2,11 +2,11 @@ public class Main {
 
     public static void main(String[] args) {
         GameConstants.init(false);
-        Startable startable = setMode();
-        startable.start();
+        Game game = setMode();
+        game.start();
     }
 
-    private static Startable setMode(){
+    private static Game setMode(){
         return switch (Visual.getMode()) {
             case 1 -> new Game.Fast();
             case 2 -> new Game.PvP();

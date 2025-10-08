@@ -19,14 +19,13 @@ record PlayerHuman(String name) implements Player {
     }
 }
 
-abstract class PlayerMinimax implements Player {
+abstract class PlayerInhumane implements Player {
 
     public Search search;
 
-    public static PlayerMinimax getBot() {
+    public static PlayerInhumane getBot() {
         return switch (Visual.getBot()) {
             case 1 -> new PlayerStrange();
-            case 2 -> new PlayerStupid();
             default -> new PlayerCompetent(20);
         };
     }
@@ -35,7 +34,7 @@ abstract class PlayerMinimax implements Player {
     }
 }
 
-class PlayerCompetent extends PlayerMinimax{
+class PlayerCompetent extends PlayerInhumane {
 
     final Evaluator[] evaluators = {new EvaluatorTiles(),new EvaluatorLinesSimple()};
     final int[] weights = {2,1};
@@ -54,7 +53,7 @@ class PlayerCompetent extends PlayerMinimax{
 
 }
 
-class PlayerStrange extends PlayerMinimax {
+class PlayerStrange extends PlayerInhumane {
 
     final Evaluator[] evaluators = {new EvaluatorTiles()};
     final int[] weights = {1};
@@ -65,29 +64,8 @@ class PlayerStrange extends PlayerMinimax {
     }
 }
 
-class PlayerStupid extends PlayerMinimax {
-    int counter = 0;
 
 
-    @Override
-    public int getMove(Bord bord) {
-        for (int i = 0; i < 7; i++) {
-            addCounter();
-            if (bord.getHumanRow(counter) >= 0) {
-                return counter;
-            }
-        }
-        return -1;
-    }
-
-    private void addCounter() {
-        counter++;
-        if (counter >= 7) {
-            counter = 0;
-        }
-    }
-}
-
-class PlayerBasic extends PlayerMinimax {
+class PlayerBasic extends PlayerInhumane {
 
 }
