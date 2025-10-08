@@ -36,7 +36,7 @@ abstract class PlayerInhumane implements Player {
 
 class PlayerCompetent extends PlayerInhumane {
 
-    final Evaluator[] evaluators = {new EvaluatorTiles(),new EvaluatorLinesSimple()};
+    final Evaluator[] evaluators = {new EvaluatorTiles(),new EvaluatorLinesStrong()};
     final int[] weights = {2,1};
 
     PlayerCompetent() {

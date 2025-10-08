@@ -1,5 +1,5 @@
 /**
- * In der Game Klasse wird das Spiel gestartet und findet dort auch statt.
+ * In der Game-Klasse wird das Spiel gestartet und findet dort auch statt.
  */
 public class Game {
     protected Player player1;
