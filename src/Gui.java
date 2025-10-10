@@ -3,13 +3,31 @@ import java.util.Scanner;
 
 import static java.lang.System.out;
 
+/**
+ * Die Visual-Klasse behandelt alle Benutzerinteraktionen und die Ausgabe.
+ * Verwaltet Eingaben über {@link Scanner} und zeigt das {@link Bord Spielbrett} an.
+ * Wird von {@link Game}, {@link PlayerHuman} und anderen Klassen verwendet.
+ */
 class Visual {
 
+    /**
+     * Scanner für Benutzereingaben
+     */
     static final Scanner scanner = new Scanner(System.in);
 
-    public static int getMode(){
-        int mode=-1;
-        do{
+    /**
+     * Fragt den Benutzer nach dem gewünschten Spielmodus.
+     * Gibt die Auswahl an {@link Main Main.setMode()} zurück.
+     *
+     * @return Die Modusnummer (1=Fast, 2=PvP, 3=EvE, 4=Test, 5=PvE)
+     * @see Game.Fast
+     * @see Game.PvP
+     * @see Game.EvE
+     * @see Game.PvE
+     */
+    public static int getMode() {
+        int mode = -1;
+        do {
             out.println("In welchem Modus möchtest du spielen?");
             out.println("1 für schnelles spiel");
             out.println("2 für PvP");
@@ -21,13 +39,21 @@ class Visual {
             } catch (Exception e) {
                 out.println("Bitte gib eine zulässige Zahl ein.");
             }
-        }while (mode==-1);
+        } while (mode == -1);
         return mode;
     }
 
-    public static int getBot(){
-        int bot=-1;
-        do{
+    /**
+     * Fragt den Benutzer nach dem gewünschten Bot-Typ.
+     * Wird von {@link PlayerInhumane#getBot()} aufgerufen.
+     *
+     * @return Die Bot-Nummer (1=Strange, 2=Stupid, 3=Competent)
+     * @see PlayerStrange
+     * @see PlayerCompetent
+     */
+    public static int getBot() {
+        int bot = -1;
+        do {
             out.println("Welcher Bot soll spielen");
             out.println("1->Strange | 2->Stupid | 3->Competent");
             try {
@@ -35,10 +61,16 @@ class Visual {
             } catch (Exception e) {
                 out.println("Bitte gib eine zulässige Zahl ein.");
             }
-        }while (bot==-1);
+        } while (bot == -1);
         return bot;
     }
 
+    /**
+     * Fragt den Benutzer nach seinem Namen.
+     * Wird vom {@link PlayerHuman#PlayerHuman()} Konstruktor aufgerufen.
+     *
+     * @return Der eingegebene Spielername
+     */
     public static String getName() {
         out.println("Spieler, wie ist dein Name?");
         String name = scanner.next();
@@ -47,6 +79,12 @@ class Visual {
         return name;
     }
 
+    /**
+     * Fragt den Benutzer, welcher Spieler beginnen soll.
+     * Wird vom {@link Bord#Bord()} Konstruktor aufgerufen.
+     *
+     * @return True, wenn Spieler X (maximierender Spieler) beginnt, sonst false
+     */
     public static boolean whoStarts() {
         boolean run = true;
         int input = 0;
@@ -56,7 +94,7 @@ class Visual {
             try {
                 input = Integer.parseInt(scanner.next());
                 if (input < 4 && input > 0) run = false;
-            } catch (Exception e){
+            } catch (Exception e) {
                 out.println("Bitte gib eine zulässige Zahl ein.");
             }
         }
@@ -67,19 +105,43 @@ class Visual {
         };
     }
 
-    public static void winner(int winner){
-        out.println("Spieler "+ winner+ " hat gewonnen.");
+    /**
+     * Zeigt den Gewinner des Spiels an.
+     * Wird von {@link Game#start()} aufgerufen.
+     *
+     * @param winner Die Spielernummer (1 oder 2) des Gewinners
+     */
+    public static void winner(int winner) {
+        out.println("Spieler " + winner + " hat gewonnen.");
     }
 
-    public static void tie(){
+    /**
+     * Zeigt ein Unentschieden an.
+     * Wird von {@link Game#start()} bei vollem {@link Bord Spielbrett} aufgerufen.
+     */
+    public static void tie() {
         out.println("Das spiel endet unendschieden.");
     }
 
+    /**
+     * Zeigt das {@link Bord Spielbrett} an.
+     * Verwendet {@link Bord#getTiles()} und {@link Bord#getLast2Moves()}.
+     *
+     * @param bord Das anzuzeigende {@link Bord Spielbrett}
+     */
     public static void displayBord(Bord bord) {
-        displayBord(bord.getTiles(),bord.getLast2Moves());
+        displayBord(bord.getTiles(), bord.getLast2Moves());
     }
 
-    public static void displayBord(int[][] bord,int[][] last2Moves) {
+    /**
+     * Zeigt das Spielbrett mit farbiger Hervorhebung der letzten Züge an.
+     * Verwendet {@link GameConstants.ConsoleColors} für die Farbdarstellung.
+     * Wird nach jedem Zug von {@link Game#game()} aufgerufen.
+     *
+     * @param bord       Das Spielbrett als 2D-Array
+     * @param last2Moves Die letzten zwei Züge für die Hervorhebung
+     */
+    public static void displayBord(int[][] bord, int[][] last2Moves) {
         for (int i = 1; i < 8; i++) {
             out.print(" " + i + "  ");
         }
@@ -89,18 +151,18 @@ class Visual {
                 out.print("[");
                 switch (bord[j][i]) {
                     case 1: {
-                        if (last2Moves[1][0]==j&&last2Moves[1][1]==i){
-                            out.print(GameConstants.ConsoleColors.RED_BOLD+GameConstants.ConsoleColors.WHITE_BACKGROUND+"X");
-                        }else{
-                            out.print(GameConstants.ConsoleColors.RED_BOLD+"x");
+                        if (last2Moves[1][0] == j && last2Moves[1][1] == i) {
+                            out.print(GameConstants.ConsoleColors.RED_BOLD + GameConstants.ConsoleColors.WHITE_BACKGROUND + "X");
+                        } else {
+                            out.print(GameConstants.ConsoleColors.RED_BOLD + "x");
                         }
                         break;
                     }
                     case -1: {
-                        if (last2Moves[0][0]==j&&last2Moves[0][1]==i){
-                            out.print(GameConstants.ConsoleColors.YELLOW_BOLD+GameConstants.ConsoleColors.WHITE_BACKGROUND+"O");
-                        }else{
-                            out.print(GameConstants.ConsoleColors.YELLOW_BOLD+"o");
+                        if (last2Moves[0][0] == j && last2Moves[0][1] == i) {
+                            out.print(GameConstants.ConsoleColors.YELLOW_BOLD + GameConstants.ConsoleColors.WHITE_BACKGROUND + "O");
+                        } else {
+                            out.print(GameConstants.ConsoleColors.YELLOW_BOLD + "o");
                         }
                         break;
                     }
@@ -116,6 +178,13 @@ class Visual {
         out.println();
     }
 
+    /**
+     * Fragt den Benutzer nach seinem nächsten Zug.
+     * Wird von {@link PlayerHuman#getMove(Bord)} aufgerufen.
+     * Validiert die Eingabe (muss zwischen 1 und 7 sein).
+     *
+     * @return Die Spaltennummer (0-6) des gewählten Zuges, oder -1 bei ungültiger Eingabe
+     */
     public static int getMove() {
         int move = -1;
         out.println("Welchen Zug möchtest du ziehen?");
@@ -128,13 +197,12 @@ class Visual {
         } catch (Exception e) {
             out.println("Bitte gib eine zulässige Zahl von 1 bis 7 ein.");
         }
-        if (move > 6||move<0) {
+        if (move > 6 || move < 0) {
             out.println("Diese Zahl ist zu groß");
             move = -1;
         }
         return move;
     }
-
 
 
 }

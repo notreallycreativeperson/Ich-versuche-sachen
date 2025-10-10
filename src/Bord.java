@@ -1,35 +1,29 @@
 import java.util.HashMap;
 
 /**
-Die Klasse Bord enthält alle nötigen Informationen, um das Spiel zu beschreiben.
-Des Weiteren ist sie auch für Veränderungen an den in der Klasse enthaltenen Daten verantwortlich.
+ * Die Klasse Bord enthält alle nötigen Informationen, um das Spiel zu beschreiben.
+ * Des Weiteren ist sie auch für Veränderungen an den in der Klasse enthaltenen Daten verantwortlich.
  */
 public class Bord {
-
-    /**
-     * Das Spielbrett an sich
-     */
-    private int[][] tiles = new int[GameConstants.COLUMNS][GameConstants.ROWS];
 
     /**
      * Ist es der Zug des maximierenden Spielers
      */
     boolean isMaxTurn;
-
     /**
      * Letzten 2 Züge; Relevant für das Highlighten in der Gui-Klasse ({@link Visual#displayBord(int[][], int[][])})
      */
     int[][] last2Moves = new int[2][2];
-
-    public int[][] getTiles() {
-        return tiles;
-    }
+    /**
+     * Das Spielbrett an sich
+     */
+    private int[][] tiles = new int[GameConstants.COLUMNS][GameConstants.ROWS];
 
     Bord() {
         isMaxTurn = Visual.whoStarts();
     }
 
-    Bord(int[] moves, int[][] tiles, int moveCount, boolean isMaxTurn, int[][] last20Moves){
+    Bord(int[] moves, int[][] tiles, int moveCount, boolean isMaxTurn, int[][] last20Moves) {
         this.tiles = tiles.clone();
         this.isMaxTurn = isMaxTurn;
     }
@@ -55,10 +49,10 @@ public class Bord {
         }
     }
 
-
     /**
      * Langsame, aber gründliche Version der {@link Bord#isWinningMove(int, int, int[][])} Methode.
      * Wurde in früheren Iterationen häufiger verwendet, wird nun aber nur noch ausßerhalb der Rekursion in {@link MiniMax#miniMax(int[][], int, int, int, boolean, boolean, int, int, HashMap, long)} verwendet.
+     *
      * @param tiles
      * @return true, wenn das Spiel gewonnen ist
      */
@@ -90,6 +84,7 @@ public class Bord {
 
     /**
      * Eine suboptimale Lösung für die Simulation der Schwerkraft, wenn man den Spielstein einwirft.
+     *
      * @param tiles
      * @param move
      * @return Die Zeile, auf die der Stein fallen würde
@@ -112,6 +107,7 @@ public class Bord {
 
     /**
      * Überprüft, ob das Spiel, entweder durch Sieg oder die Ausfüllung der Spalten, beendet ist.
+     *
      * @param tiles
      * @return true, wenn das Spiel beendet ist
      */
@@ -120,7 +116,61 @@ public class Bord {
     }
 
     /**
+     *
+     * @param tiles
+     * @return true, wenn das Spielfeld voll ist
+     */
+    public static boolean isFinished(int[][] tiles) {
+        for (int i = 0; i < GameConstants.COLUMNS; i++) {
+            if (tiles[i][GameConstants.ROWS - 1] == GameConstants.EMPTY) return false;
+        }
+        return true;
+    }
+
+    /**
+     * Kürzere Version der {@link Bord#isWon(int[][])} Methode, die nur das zuletzt gezogene Feld überprüft
+     *
+     * @param x
+     * @param y
+     * @param tiles
+     * @return
+     */
+    public static boolean isWinningMove(int x, int y, int[][] tiles) {
+        if ((x == -1 || y == -1) || (tiles[x][y] == 0)) return false;
+
+        for (int dirIndex = 0; dirIndex < GameConstants.INDICES.length; dirIndex++) {
+            int count = 1;
+
+            for (int step = 1; step < GameConstants.WINNING_LENGTH; step++) {
+                int newX = x + GameConstants.INDICES[dirIndex][0] * step;
+                int newY = y + GameConstants.INDICES[dirIndex][1] * step;
+
+                if (newX < 0 || newX >= GameConstants.COLUMNS ||
+                        newY < 0 || newY >= GameConstants.ROWS ||
+                        tiles[x][y] != tiles[newX][newY]) {
+                    break;
+                }
+                count++;
+            }
+
+            if (count == GameConstants.WINNING_LENGTH) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public static long hash(int[][] tiles) {
+        return java.util.Arrays.deepHashCode(tiles);
+    }
+
+    public int[][] getTiles() {
+        return tiles;
+    }
+
+    /**
      * updated die Variablen die beim Zug verändert werden müssen
+     *
      * @param move
      */
     public void move(int move) {
@@ -129,18 +179,19 @@ public class Bord {
         }
 
         int row = getRow(move);
-        if (row < 0){
+        if (row < 0) {
             throw new IllegalArgumentException("Column " + move + " is already full.");
         }
 
         tiles[move][row] = getStartingPlayer(isMaxTurn);
-        last2Moves[(getStartingPlayer(isMaxTurn)+1)/2][0] =move;
-        last2Moves[(getStartingPlayer(isMaxTurn)+1)/2][1] =row;
+        last2Moves[(getStartingPlayer(isMaxTurn) + 1) / 2][0] = move;
+        last2Moves[(getStartingPlayer(isMaxTurn) + 1) / 2][1] = row;
         switchPlayer();
     }
 
     /**
      * siehe {@link Bord#getRow(int[][], int)}
+     *
      * @param move
      * @return
      */
@@ -159,6 +210,7 @@ public class Bord {
 
     /**
      * Wandelt den {@param isMaxTurn}-Wert in einen Spielstein-Wert um.
+     *
      * @param isMaxTurn
      * @return true
      */
@@ -170,56 +222,8 @@ public class Bord {
         isMaxTurn = !isMaxTurn;
     }
 
-    /**
-     *
-     * @param tiles
-     * @return true, wenn das Spielfeld voll ist
-     */
-    public static boolean isFinished(int[][] tiles) {
-        for (int i = 0; i < GameConstants.COLUMNS; i++) {
-            if (tiles[i][GameConstants.ROWS - 1] == GameConstants.EMPTY) return false;
-        }
-        return true;
-    }
-
     public boolean check() {
         return check(tiles);
-    }
-
-    /**
-     * Kürzere Version der {@link Bord#isWon(int[][])} Methode, die nur das zuletzt gezogene Feld überprüft
-     * @param x
-     * @param y
-     * @param tiles
-     * @return
-     */
-    public static boolean isWinningMove(int x, int y, int[][] tiles) {
-        if ((x == -1 || y == -1) || (tiles[x][y] == 0)) return false;
-        
-        for (int dirIndex = 0; dirIndex < GameConstants.INDICES.length; dirIndex++) {
-            int count = 1;
-
-            for (int step = 1; step < GameConstants.WINNING_LENGTH; step++) {
-                int newX = x + GameConstants.INDICES[dirIndex][0] * step;
-                int newY = y + GameConstants.INDICES[dirIndex][1] * step;
-                
-                if (newX < 0 || newX >= GameConstants.COLUMNS || 
-                    newY < 0 || newY >= GameConstants.ROWS ||
-                    tiles[x][y] != tiles[newX][newY]) {
-                    break;
-                }
-                count++;
-            }
-
-            if (count == GameConstants.WINNING_LENGTH) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    public static long hash(int[][] tiles) {
-        return java.util.Arrays.deepHashCode(tiles);
     }
 
     public int[][] getLast2Moves() {

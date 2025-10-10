@@ -15,9 +15,9 @@ public class GameConstants {
 
     // Misc constants
     public static final int[][] INDICES;
-    public static long[][] HASH_VALUES;
     public static final int[] PRIMES;
     static final boolean[][][] directions;
+    public static long[][] HASH_VALUES;
     public static boolean DEBUG;
 
 
@@ -56,9 +56,9 @@ public class GameConstants {
                 directions[col][row][2] = row < ROWS - WINNING_LENGTH;
                 directions[col][row][3] = col > COLUMNS - WINNING_LENGTH && row < ROWS - WINNING_LENGTH;
                 directions[col][row][4] = col > COLUMNS - WINNING_LENGTH;
-                directions[col][row][5] = col > COLUMNS-WINNING_LENGTH && row > ROWS - WINNING_LENGTH;
+                directions[col][row][5] = col > COLUMNS - WINNING_LENGTH && row > ROWS - WINNING_LENGTH;
                 directions[col][row][6] = row > ROWS - WINNING_LENGTH;
-                directions[col][row][7] = col < COLUMNS-WINNING_LENGTH && row > ROWS - WINNING_LENGTH;
+                directions[col][row][7] = col < COLUMNS - WINNING_LENGTH && row > ROWS - WINNING_LENGTH;
             }
         }
     }
@@ -67,7 +67,7 @@ public class GameConstants {
         HASH_VALUES = new long[COLUMNS][ROWS];
         for (int i = 0; i < COLUMNS; i++) {
             for (int j = 0; j < ROWS; j++) {
-                HASH_VALUES[i][j] = (long) PRIMES[i] * PRIMES[COLUMNS+j];
+                HASH_VALUES[i][j] = (long) PRIMES[i] * PRIMES[COLUMNS + j];
             }
         }
     }
@@ -80,7 +80,6 @@ public class GameConstants {
     }
 
     public static class ConsoleColors {
-        // Reset
         public static final String RESET = "\033[0m";  // Text Reset
         public static final String RED_BOLD = "\033[1;31m";    // RED
         public static final String YELLOW_BOLD = "\033[1;33m"; // YELLOW

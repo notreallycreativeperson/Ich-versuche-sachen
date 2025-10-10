@@ -2,25 +2,25 @@ import java.util.HashMap;
 
 public class Search {
 
+    static int[] scores = new int[7];
     final EvalHandler eval;
     final MiniMax minimax;
-    static int[] scores = new int[7];
-    HashMap<Long,Entry> transPositionTable = new HashMap<>();
     final int depth;
+    HashMap<Long, Entry> transPositionTable = new HashMap<>();
 
     Search(EvalHandler eval, int depth) {
-        this(eval, depth, true, true,true);
+        this(eval, depth, true, true, true);
     }
 
     Search(EvalHandler eval, int depth, boolean abp, boolean tpt, boolean oso) {
         this.depth = depth;
-        this.eval=eval;
+        this.eval = eval;
 
-        minimax = new MiniMax(eval,abp,tpt,oso);
+        minimax = new MiniMax(eval, abp, tpt, oso);
     }
 
-    public int getBestMove(Bord bord){
-        int i = minimax.miniMax(bord.getTiles(), depth, Integer.MIN_VALUE, Integer.MAX_VALUE, bord.isMaxTurn, false, 0, 0, transPositionTable,2);
+    public int getBestMove(Bord bord) {
+        int i = minimax.miniMax(bord.getTiles(), depth, Integer.MIN_VALUE, Integer.MAX_VALUE, bord.isMaxTurn, false, 0, 0, transPositionTable, 2);
         transPositionTable.clear();
         return i;
     }
