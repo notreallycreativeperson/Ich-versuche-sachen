@@ -11,9 +11,8 @@ public class Main {
             case 1 -> new Game.Fast();
             case 2 -> new Game.PvP();
             case 3 -> new Game.EvE();
-            case 4 -> new Game(new PlayerCompetent(11), new PlayerCompetent(11), true);
+            case 4 -> new Game.EvE(new PlayerCompetent(11), new PlayerCompetent(11), true);
             default -> new Game.PvE();
         };
     }
-
 }

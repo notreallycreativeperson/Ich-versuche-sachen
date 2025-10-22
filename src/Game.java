@@ -2,7 +2,7 @@
  * In der Game-Klasse wird das Spiel gestartet und findet dort auch statt.
  * Diese Klasse verwaltet die Spieler, das Spielbrett und die Spiellogik.
  */
-public class Game {
+public abstract class Game {
     /**
      * Das Spielbrett
      */
@@ -73,7 +73,7 @@ public class Game {
      */
     protected int game() {
         TimeWatcher.start();
-        while (!bord.check()) {
+        while (!Bord.isFinished(bord.getTiles())) {
             int move;
             if (bord.isMaxTurn) {
                 TimeWatcher.start(1);
@@ -89,17 +89,17 @@ public class Game {
 
             Info.logTurns();
 
-            if (move == -1) {
-                return -1;
+            if (Bord.isWon(bord.getTiles())) {
+                return (bord.isMaxTurn ? 1 : 2);
+            } else if (move == -1) {
+                return (bord.isMaxTurn ? 2 : 1);
             }
 
             bord.move(move);
             Visual.displayBord(bord);
         }
 
-        if (Bord.isWon(bord.getTiles())) {
-            return (bord.isMaxTurn ? 2 : 1);
-        }
+
         return -1;
     }
 

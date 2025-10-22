@@ -1,9 +1,12 @@
+import java.util.ArrayList;
+
 public class Info {
     static int betaPrune = 0;
-    static int[] ttPrune = new int[13];
+    static int[] ttPrune = new int[15];
     static int movesP1 = 0;
     static int movesP2 = 0;
     static int turns = 0;
+    static ArrayList<Data> gameData = new ArrayList<>();
 
     public static void logPrune(int depth) {
         if (depth < ttPrune.length) {
@@ -38,6 +41,13 @@ public class Info {
         System.out.println(TimeWatcher.getElapsedTime(1) / (turns / 2) + "ms pro Zug bei P1");
         System.out.println(TimeWatcher.getElapsedTime(2) / (turns / 2) + "ms pro Zug bei P2");
     }
+
+    public static void saveGameData() {
+        for (int i = 0; i < ttPrune.length; i++) {
+
+        }
+    }
+
 }
 
 class TimeWatcher {
@@ -77,5 +87,16 @@ class TimeWatcher {
         } else {
             return elapsedTimeP2;
         }
+    }
+}
+
+class Data{
+    Player player;
+    int turns;
+    int time;
+    Data(Player player, int turns, int time) {
+        this.player = player;
+        this.turns = turns;
+        this.time = time;
     }
 }
