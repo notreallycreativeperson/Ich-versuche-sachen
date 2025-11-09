@@ -1,18 +1,19 @@
 public class Main {
 
     public static void main(String[] args) {
-        GameConstants.init(false);
-        Game game = setMode();
-        game.start();
-    }
-
-    private static Game setMode() {
-        return switch (Visual.getMode()) {
-            case 1 -> new Game.Fast();
-            case 2 -> new Game.PvP();
-            case 3 -> new Game.EvE();
-            case 4 -> new Game.EvE(new PlayerCompetent(11), new PlayerCompetent(11), true);
-            default -> new Game.PvE();
-        };
+        Player[] players = new Player[10];
+        players[0]=new PlayerCompetent(9);
+        players[1]= new PlayerMinimax(9,true,false,true);
+        players[2]= new PlayerMinimax(9,false,true,false);
+        players[3]= new PlayerMinimax(9,true,true,false);
+        players[4]= new PlayerMinimax(9,true,false,false);
+        players[5]= new PlayerMinimax(9,false,false,false);
+        players[8]= new PlayerMinimax(9,true,true,true);
+        players[7]= new PlayerCompetent(10);
+        players[6]= new PlayerMinimax(9,true,true,true);
+        players[9]= new PlayerCompetent(10);
+        Tournament t = new Tournament(players);
+        t.execute();
+        t.printResults();
     }
 }

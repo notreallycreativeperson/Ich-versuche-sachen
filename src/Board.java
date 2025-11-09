@@ -1,10 +1,10 @@
 import java.util.HashMap;
 
 /**
- * Die Klasse Bord enthält alle nötigen Informationen, um das Spiel zu beschreiben.
+ * Die Klasse Board enthält alle nötigen Informationen, um das Spiel zu beschreiben.
  * Des Weiteren ist sie auch für Veränderungen an den in der Klasse enthaltenen Daten verantwortlich.
  */
-public class Bord {
+public class Board {
 
     /**
      * Ist es der Zug des maximierenden Spielers
@@ -19,21 +19,21 @@ public class Bord {
      */
     private int[][] tiles = new int[GameConstants.COLUMNS][GameConstants.ROWS];
 
-    Bord() {
+    Board() {
         isMaxTurn = Visual.whoStarts();
     }
 
-    Bord(int[] moves, int[][] tiles, int moveCount, boolean isMaxTurn, int[][] last20Moves) {
+    Board(int[] moves, int[][] tiles, int moveCount, boolean isMaxTurn, int[][] last20Moves) {
         this.tiles = tiles.clone();
         this.isMaxTurn = isMaxTurn;
     }
 
     @SuppressWarnings("SameParameterValue")
-    Bord(boolean isMaxTurn) {
+    Board(boolean isMaxTurn) {
         this.isMaxTurn = isMaxTurn;
     }
 
-    Bord(int[] moves) {
+    Board(int[] moves) {
         this.isMaxTurn = true; // Initialize isMaxTurn
         for (int move : moves) {
             if (move == -1) break;
@@ -50,8 +50,8 @@ public class Bord {
     }
 
     /**
-     * Langsame, aber gründliche Version der {@link Bord#isWinningMove(int, int, int[][])} Methode.
-     * Wurde in früheren Iterationen häufiger verwendet, wird nun aber nur noch ausßerhalb der Rekursion in {@link MiniMax#miniMax(int[][], int, int, int, boolean, boolean, int, int, HashMap, long)} verwendet.
+     * Langsame, aber gründliche Version der {@link Board#isWinningMove(int, int, int[][])} Methode.
+     * Wurde in früheren Iterationen häufiger verwendet, wird nun aber nur noch ausßerhalb der Rekursion in {@link MiniMax#miniMax(int[][], int, int, int, boolean, boolean, int, int, HashMap, long, GameData)} verwendet.
      *
      * @param tiles
      * @return true, wenn das Spiel gewonnen ist
@@ -90,7 +90,7 @@ public class Bord {
      * @return Die Zeile, auf die der Stein fallen würde
      */
     public static int getRow(int[][] tiles, int move) {
-        Bord.checkMoveBounds(move);
+        Board.checkMoveBounds(move);
         for (int row = 0; row < GameConstants.ROWS; row++) {
             if (tiles[move][row] == GameConstants.EMPTY) {
                 return row;
@@ -128,7 +128,7 @@ public class Bord {
     }
 
     /**
-     * Kürzere Version der {@link Bord#isWon(int[][])} Methode, die nur das zuletzt gezogene Feld überprüft
+     * Kürzere Version der {@link Board#isWon(int[][])} Methode, die nur das zuletzt gezogene Feld überprüft
      *
      * @param x
      * @param y
@@ -190,7 +190,7 @@ public class Bord {
     }
 
     /**
-     * siehe {@link Bord#getRow(int[][], int)}
+     * siehe {@link Board#getRow(int[][], int)}
      *
      * @param move
      * @return

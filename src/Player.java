@@ -1,37 +1,56 @@
 public interface Player {
-    int getMove(Bord bord);
+    int getMove(Board board,GameData gameData);
+    /** Human-readable name for logging and test display. */
+    PlayerData getPlayerData();
+
+    String getPlayerName();
+
+    void printPlayerData();
 }
 
 /**
  * Record-Klasse für menschliche Spieler.
  * Implementiert {@link Player} und verwendet {@link Visual} für die Eingabe.
  *
- * @param name Der Name des Spielers
  */
-record PlayerHuman(String name) implements Player {
+class PlayerHuman implements Player {
 
+    private PlayerData playerData;
+    private String playerName;
     /**
      * Standardkonstruktor, der den Namen über {@link Visual#getName()} abfragt.
      */
     public PlayerHuman() {
-        this(Visual.getName());
+        Visual.getName();
     }
-
 
     /**
      * Holt den nächsten Zug von einem menschlichen Spieler über {@link Visual#getMove()}.
      * Wiederholt die Abfrage, bis ein gültiger Zug eingegeben wurde.
      *
-     * @param bord Das aktuelle {@link Bord Spielbrett}
+     * @param board Das aktuelle {@link Board Spielbrett}
      * @return Die Spaltennummer des gewählten Zuges
      */
     @Override
-    public int getMove(Bord bord) {
+    public int getMove(Board board,GameData gameData) {
         int move = -1;
         while (move < 0) {
             move = Visual.getMove();
         }
         return move;
+    }
+
+
+    public PlayerData getPlayerData() {
+        return playerData;
+    }
+
+    public String getPlayerName(){
+        return playerName;
+    }
+
+    public void printPlayerData() {
+        Visual.printPlayerData(playerName,playerData);
     }
 }
 
@@ -39,38 +58,47 @@ record PlayerHuman(String name) implements Player {
  * Abstrakte Basisklasse für KI-gesteuerte Spieler (nicht-menschliche Spieler).
  * Verwendet eine {@link Search}-Instanz für die Zugfindung mittels {@link MiniMax}-Algorithmus.
  *
- * @see PlayerCompetent
+ * @see PlayerMinimax
  * @see PlayerStrange
- * @see PlayerBasic
  */
 abstract class PlayerInhumane implements Player {
 
+    private PlayerData playerData;
     /**
      * Die Suchinstanz für die KI-Zugberechnung
      */
     public Search search;
 
+
+    public PlayerInhumane() {
+        playerData=new PlayerData();
+    }
     /**
      * Factory-Methode, die einen Bot basierend auf Benutzereingabe erstellt.
      * Verwendet {@link Visual#getBot()} für die Auswahl.
      *
-     * @return Eine Instanz von {@link PlayerStrange} oder {@link PlayerCompetent}
+     * @return Eine Instanz von {@link PlayerStrange} oder {@link PlayerMinimax}
      */
     public static PlayerInhumane getBot() {
         return switch (Visual.getBot()) {
             case 1 -> new PlayerStrange();
-            default -> new PlayerCompetent(20);
+            default -> new PlayerMinimax(20);
         };
     }
 
+
     /**
-     * Ermittelt den besten Zug mittels {@link Search#getBestMove(Bord)}.
+     * Ermittelt den besten Zug mittels {@link Search#getBestMove(Board, GameData)} )}.
      *
-     * @param bord Das aktuelle {@link Bord Spielbrett}
+     * @param board Das aktuelle {@link Board Spielbrett}
      * @return Die Spaltennummer des besten Zuges
      */
-    public int getMove(Bord bord) {
-        return search.getBestMove(bord);
+    public int getMove(Board board,GameData gameData) {
+        return search.getBestMove(board, gameData);
+    }
+
+    public PlayerData getPlayerData() {
+        return playerData;
     }
 }
 
@@ -79,7 +107,9 @@ abstract class PlayerInhumane implements Player {
  * Verwendet {@link EvaluatorTiles} und {@link EvaluatorLinesStrong} für die Stellungsbewertung.
  * Erweitert {@link PlayerInhumane}.
  */
-class PlayerCompetent extends PlayerInhumane {
+class PlayerMinimax extends PlayerInhumane {
+
+    String name;
 
     /**
      * Array der verwendeten {@link Evaluator Evaluatoren}
@@ -95,10 +125,40 @@ class PlayerCompetent extends PlayerInhumane {
      * Erstellt einen kompetenten Spieler mit Standard-Suchtiefe 20.
      * Initialisiert {@link Search} mit {@link EvalHandler}.
      */
-    PlayerCompetent() {
-        EvalHandler eval = new EvalHandler(evaluators, weights);
-        search = new Search(eval, 20);
+
+
+    PlayerMinimax(EvalHandler eval, int depth, boolean abp, boolean tpt, boolean oso){
+        search = new Search(eval, depth, abp, tpt, oso);
+        name="Minimax "+"depth="+depth;
+        if (abp){
+            name+=", abp";
+        }
+        if (tpt){
+            name+=", tpt";
+        }
+        if (oso){
+            name+=", oso";
+        }
     }
+
+    PlayerMinimax(int depth, boolean abp, boolean tpt, boolean oso){
+        final Evaluator[] evaluators = {new EvaluatorTiles(), new EvaluatorLinesStrong()};
+        final int[] weights = {2, 1};
+        final EvalHandler eval=new EvalHandler(evaluators,weights);
+        search = new Search(eval, depth, abp, tpt, oso);
+        name="Minimax "+"depth="+depth;
+        if (abp){
+            name+=", abp";
+        }
+        if (tpt){
+            name+=", tpt";
+        }
+        if (oso){
+            name+=", oso";
+        }
+    }
+
+
 
     /**
      * Erstellt einen kompetenten Spieler mit angegebener Suchtiefe.
@@ -106,12 +166,35 @@ class PlayerCompetent extends PlayerInhumane {
      * @param depth Die Suchtiefe für den {@link MiniMax}-Algorithmus
      */
     @SuppressWarnings("SameParameterValue")
-    PlayerCompetent(int depth) {
+    PlayerMinimax(int depth) {
         EvalHandler eval = new EvalHandler(evaluators, weights);
         search = new Search(eval, depth);
+        name="Minimax "+"depth="+depth+", abp"+", tpt"+", oso";
     }
 
+    public String getPlayerName() {
+        return name;
+    }
 
+    public void printPlayerData() {
+        Visual.printPlayerData(name,this.getPlayerData());
+    }
+
+    @Override
+    public PlayerData getPlayerData() {
+        return super.getPlayerData();
+    }
+}
+
+class PlayerCompetent extends PlayerMinimax {
+    PlayerCompetent(int depth) {
+        super(depth);
+    }
+
+    @Override
+    public String getPlayerName() {
+        return super.getPlayerName();
+    }
 }
 
 /**
@@ -121,7 +204,7 @@ class PlayerCompetent extends PlayerInhumane {
  */
 class PlayerStrange extends PlayerInhumane {
     final Evaluator[] evaluators = {new EvaluatorTiles()};
-
+    final String name="PlayerStrage";
     /**
      * Gewichtung für den {@link Evaluator}
      */
@@ -135,13 +218,17 @@ class PlayerStrange extends PlayerInhumane {
         EvalHandler eval = new EvalHandler(evaluators, weights);
         search = new Search(eval, 3);
     }
-}
 
+    public String getPlayerName() {
+        return name;
+    }
 
-/**
- * Basis-Implementierung eines KI-Spielers.
- * Erweitert {@link PlayerInhumane}, derzeit ohne zusätzliche Implementierung.
- */
-class PlayerBasic extends PlayerInhumane {
+    public void printPlayerData() {
+        Visual.printPlayerData(name,this.getPlayerData());
+    }
 
+    @Override
+    public PlayerData getPlayerData() {
+        return super.getPlayerData();
+    }
 }

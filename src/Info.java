@@ -1,102 +1,152 @@
-import java.util.ArrayList;
-
-public class Info {
-    static int betaPrune = 0;
-    static int[] ttPrune = new int[15];
-    static int movesP1 = 0;
-    static int movesP2 = 0;
-    static int turns = 0;
-    static ArrayList<Data> gameData = new ArrayList<>();
-
-    public static void logPrune(int depth) {
-        if (depth < ttPrune.length) {
-            ttPrune[depth]++;
-        } else {
-            betaPrune++;
-        }
-    }
-
-    public static void printPrunes() {
-        System.out.println("BetaPrunes: " + betaPrune);
-        betaPrune = 0;
-        for (int i = 0; i < ttPrune.length; i++) {
-            System.out.println("Prunes at depth " + (i) + " : " + ttPrune[i]);
-            ttPrune[i] = 0;
-        }
-    }
-
-    static void logTurns() {
-        turns++;
-    }
-
-    static void logMoves(int player) {
-        if (player == 1) {
-            movesP1++;
-        } else {
-            movesP2++;
-        }
-    }
-
-    public static void printTime() {
-        System.out.println(TimeWatcher.getElapsedTime(1) / (turns / 2) + "ms pro Zug bei P1");
-        System.out.println(TimeWatcher.getElapsedTime(2) / (turns / 2) + "ms pro Zug bei P2");
-    }
-
-    public static void saveGameData() {
-        for (int i = 0; i < ttPrune.length; i++) {
-
-        }
-    }
-
-}
-
 class TimeWatcher {
-    static long startTime;
-    static long startTimeP1;
-    static long elapsedTimeP1;
-    static long startTimeP2;
-    static long elapsedTimeP2;
+    long startTime;
 
-    static void start() {
+    void start() {
         startTime = System.currentTimeMillis();
     }
 
-    static long getElapsedTime() {
+    long stop() {
         return System.currentTimeMillis() - startTime;
-    }
-
-    static void start(int player) {
-        if (player == 1) {
-            startTimeP1 = System.currentTimeMillis();
-        } else {
-            startTimeP2 = System.currentTimeMillis();
-        }
-    }
-
-    static void stop(int player) {
-        if (player == 1) {
-            elapsedTimeP1 += System.currentTimeMillis() - startTimeP1;
-        } else {
-            elapsedTimeP2 += System.currentTimeMillis() - startTimeP2;
-        }
-    }
-
-    static long getElapsedTime(int player) {
-        if (player == 1) {
-            return elapsedTimeP1;
-        } else {
-            return elapsedTimeP2;
-        }
     }
 }
 
-class Data{
-    Player player;
+class PlayerData {
     int turns;
     int time;
-    Data(Player player, int turns, int time) {
-        this.player = player;
-        this.turns = turns;
-        this.time = time;
+    int gamesPlayed;
+    int gamesWon;
+    int gamesLost;
+    int gamesDraw;
+    int prunesTT;
+    int prunesAB;
+    int nodesVisited;
+    PlayerData() {
+        turns = 0;
+        time = 0;
+        gamesPlayed = 0;
+        gamesWon = 0;
+        gamesLost = 0;
+        gamesDraw = 0;
+        prunesTT = 0;
+        prunesAB = 0;
+    }
+    public void printPlayerData(){
+        System.out.println("turns played: " + turns);
+        System.out.println("time played: " + time);
+        System.out.println("time per turn: " + (time/turns) + " ms");
+        System.out.println("gamesPlayed: " + gamesPlayed);
+        System.out.println("gamesWon: " + gamesWon);
+        System.out.println("gamesLost: " + gamesLost);
+        System.out.println("gamesDraw: " + gamesDraw);
+        System.out.println("prunesTT per turn: " + prunesTT/turns);
+        System.out.println("prunesAB per turn: " + prunesAB/turns);
+        System.out.println("nodesVisited per turn: " + nodesVisited/turns);
+    }
+}
+
+class GameData {
+    private TimeWatcher watcher;
+    Player playerMax;
+    private long timeMsMax;
+    private int nodesVisitedMax;
+    private int prunesTTMax;
+    private int prunesABMax;
+    Player playerMin;
+    private long timeMsMin;
+    private int nodesVisitedMin;
+    private int prunesTTMin;
+    private int prunesABMin;
+    boolean isPlayerMaxWinner;
+    boolean isDraw;
+    public void setWinner(boolean isPlayerMaxWinner) {
+        this.isPlayerMaxWinner = isPlayerMaxWinner;
+        if (isPlayerMaxWinner) {
+            playerMax.getPlayerData().gamesWon++;
+            playerMin.getPlayerData().gamesLost++;
+        } else {
+            playerMin.getPlayerData().gamesWon++;
+            playerMax.getPlayerData().gamesLost++;
+        }
+        saveGameDataToPlayer();
+    }
+
+    public void setDraw() {
+        isDraw = true;
+        playerMax.getPlayerData().gamesDraw++;
+        playerMin.getPlayerData().gamesDraw++;
+        saveGameDataToPlayer();
+    }
+
+    public void saveGameDataToPlayer() {
+        playerMax.getPlayerData().gamesPlayed++;
+        playerMin.getPlayerData().gamesPlayed++;
+        playerMax.getPlayerData().time +=timeMsMax;
+        playerMin.getPlayerData().time +=timeMsMin;
+        playerMax.getPlayerData().nodesVisited += nodesVisitedMax;
+        playerMin.getPlayerData().nodesVisited += nodesVisitedMin;
+        playerMax.getPlayerData().prunesTT += prunesTTMax;
+        playerMax.getPlayerData().prunesAB += prunesABMax;
+        playerMin.getPlayerData().prunesTT += prunesTTMin;
+        playerMin.getPlayerData().prunesAB += prunesABMin;
+    }
+
+    public void logTimeStart() {
+        watcher.start();
+    }
+
+    public void logTimeEnd(boolean isMaxPlayer) {
+        if (isMaxPlayer) {
+            timeMsMax += watcher.stop();
+            playerMax.getPlayerData().turns ++;
+        }else {
+            timeMsMin += watcher.stop();
+            playerMin.getPlayerData().turns ++;
+        }
+    }
+
+    public void logPrune(boolean isTT, boolean isMaxPlayer) {
+        if(isMaxPlayer) {
+            if(isTT) {
+                prunesTTMax++;
+            }else {
+                prunesABMax++;
+            }
+        }else{
+            if(isTT) {
+                prunesTTMin++;
+            }else {
+                prunesABMin++;
+            }
+        }
+    }
+
+    public void logNodesVisit(boolean isMaxTurn) {
+        if(isMaxTurn) {
+            nodesVisitedMax++;
+        }else  {
+            nodesVisitedMin++;
+        }
+    }
+    GameData(Player playerMax, Player playerMin) {
+        this.playerMax = playerMax;
+        this.playerMin = playerMin;
+        watcher = new TimeWatcher();
+    }
+    GameData(GameData gameData1, GameData gameData2) {
+        this.playerMax = gameData1.playerMax;
+        this.playerMin = gameData1.playerMin;
+        this.timeMsMax = gameData1.timeMsMax+gameData2.timeMsMin;
+        this.nodesVisitedMax = gameData1.nodesVisitedMax+gameData2.nodesVisitedMin;
+        this.prunesTTMax=gameData1.prunesTTMax+gameData2.prunesTTMin;
+        this.prunesABMax=gameData1.prunesABMax+gameData2.prunesABMin;
+        this.timeMsMin = gameData1.timeMsMin+gameData2.timeMsMax;
+        this.nodesVisitedMin=gameData1.nodesVisitedMin+gameData2.nodesVisitedMax;
+        this.prunesTTMin=gameData1.prunesTTMin+gameData2.prunesTTMax;
+        this.prunesABMin=gameData1.prunesABMin+gameData2.prunesABMax;
+        if((gameData1.isPlayerMaxWinner&&!gameData2.isPlayerMaxWinner)||(gameData1.isDraw&&!(gameData2.isDraw|| gameData2.isPlayerMaxWinner))) {
+            isPlayerMaxWinner=true;
+        } else if (!((gameData2.isPlayerMaxWinner&&!gameData1.isPlayerMaxWinner)|| (gameData2.isDraw&&!gameData1.isDraw))) {
+            isDraw=true;
+        }
     }
 }

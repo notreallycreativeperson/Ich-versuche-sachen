@@ -5,7 +5,7 @@ import static java.lang.System.out;
 
 /**
  * Die Visual-Klasse behandelt alle Benutzerinteraktionen und die Ausgabe.
- * Verwaltet Eingaben über {@link Scanner} und zeigt das {@link Bord Spielbrett} an.
+ * Verwaltet Eingaben über {@link Scanner} und zeigt das {@link Board Spielbrett} an.
  * Wird von {@link Game}, {@link PlayerHuman} und anderen Klassen verwendet.
  */
 class Visual {
@@ -18,12 +18,6 @@ class Visual {
     /**
      * Fragt den Benutzer nach dem gewünschten Spielmodus.
      * Gibt die Auswahl an {@link Main Main.setMode()} zurück.
-     *
-     * @return Die Modusnummer (1=Fast, 2=PvP, 3=EvE, 4=Test, 5=PvE)
-     * @see Game.Fast
-     * @see Game.PvP
-     * @see Game.EvE
-     * @see Game.PvE
      */
     public static int getMode() {
         int mode = -1;
@@ -49,7 +43,7 @@ class Visual {
      *
      * @return Die Bot-Nummer (1=Strange, 2=Stupid, 3=Competent)
      * @see PlayerStrange
-     * @see PlayerCompetent
+     * @see PlayerMinimax
      */
     public static int getBot() {
         int bot = -1;
@@ -81,7 +75,7 @@ class Visual {
 
     /**
      * Fragt den Benutzer, welcher Spieler beginnen soll.
-     * Wird vom {@link Bord#Bord()} Konstruktor aufgerufen.
+     * Wird vom {@link Board#Board()} Konstruktor aufgerufen.
      *
      * @return True, wenn Spieler X (maximierender Spieler) beginnt, sonst false
      */
@@ -107,7 +101,7 @@ class Visual {
 
     /**
      * Zeigt den Gewinner des Spiels an.
-     * Wird von {@link Game#start()} aufgerufen.
+     * Wird von {@link Game#play(Player, Player)} aufgerufen.
      *
      * @param winner Die Spielernummer (1 oder 2) des Gewinners
      */
@@ -117,26 +111,26 @@ class Visual {
 
     /**
      * Zeigt ein Unentschieden an.
-     * Wird von {@link Game#start()} bei vollem {@link Bord Spielbrett} aufgerufen.
+     * Wird von {@link Game#play(Player, Player)} bei vollem {@link Board Spielbrett} aufgerufen.
      */
     public static void tie() {
         out.println("Das spiel endet unendschieden.");
     }
 
     /**
-     * Zeigt das {@link Bord Spielbrett} an.
-     * Verwendet {@link Bord#getTiles()} und {@link Bord#getLast2Moves()}.
+     * Zeigt das {@link Board Spielbrett} an.
+     * Verwendet {@link Board#getTiles()} und {@link Board#getLast2Moves()}.
      *
-     * @param bord Das anzuzeigende {@link Bord Spielbrett}
+     * @param board Das anzuzeigende {@link Board Spielbrett}
      */
-    public static void displayBord(Bord bord) {
-        displayBord(bord.getTiles(), bord.getLast2Moves());
+    public static void displayBord(Board board) {
+        displayBord(board.getTiles(), board.getLast2Moves());
     }
 
     /**
      * Zeigt das Spielbrett mit farbiger Hervorhebung der letzten Züge an.
      * Verwendet {@link GameConstants.ConsoleColors} für die Farbdarstellung.
-     * Wird nach jedem Zug von {@link Game#game()} aufgerufen.
+     * Wird nach jedem Zug von {@link Game#play(Player, Player)} aufgerufen.
      *
      * @param bord       Das Spielbrett als 2D-Array
      * @param last2Moves Die letzten zwei Züge für die Hervorhebung
@@ -180,7 +174,7 @@ class Visual {
 
     /**
      * Fragt den Benutzer nach seinem nächsten Zug.
-     * Wird von {@link PlayerHuman#getMove(Bord)} aufgerufen.
+     * Wird von {@link PlayerHuman#getMove(Board, GameData)} aufgerufen.
      * Validiert die Eingabe (muss zwischen 1 und 7 sein).
      *
      * @return Die Spaltennummer (0-6) des gewählten Zuges, oder -1 bei ungültiger Eingabe
@@ -204,5 +198,22 @@ class Visual {
         return move;
     }
 
+    public static void printPlayerData(String playerName,PlayerData playerData) {
+        out.println(playerName + ": ");
+        playerData.printPlayerData();
+        out.println();
+        out.println();
+    }
+
+    public static void printGame(GameData gameData) {
+        out.print(gameData.playerMax.getPlayerName()+" vs "+ gameData.playerMin.getPlayerName()+ ": ");
+        if(gameData.isDraw){
+            out.println(" Draw");
+        } else if (gameData.isPlayerMaxWinner) {
+           out.println(gameData.playerMax.getPlayerName());
+        }else {
+            out.println(gameData.playerMin.getPlayerName());
+        }
+    }
 
 }

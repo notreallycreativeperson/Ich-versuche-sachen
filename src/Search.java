@@ -19,29 +19,9 @@ public class Search {
         minimax = new MiniMax(eval, abp, tpt, oso);
     }
 
-    public int getBestMove(Bord bord) {
-        int i = minimax.miniMax(bord.getTiles(), depth, Integer.MIN_VALUE, Integer.MAX_VALUE, bord.isMaxTurn, false, 0, 0, transPositionTable, 2);
+    public int getBestMove(Board board, GameData gameData) {
+        int i = minimax.miniMax(board.getTiles(), depth, Integer.MIN_VALUE, Integer.MAX_VALUE, board.isMaxTurn, false, 0, 0, transPositionTable, 2, gameData);
         transPositionTable.clear();
         return i;
     }
-
-//    public static void logScore(int move, int score){
-//        scores[move]=score;
-//    }
-
-/*
-    private static void sortOrder(){
-        for (int i = 1; i < 6; i++) {
-            for (int j = i; j < 7; j++) {
-                if (scores[GameConstants.EXPLORE_ORDER[j-1]] < scores[GameConstants.EXPLORE_ORDER[j]]) {
-                    int temp =GameConstants.EXPLORE_ORDER[j-1];
-                    GameConstants.EXPLORE_ORDER[j-1]=GameConstants.EXPLORE_ORDER[j];
-                    GameConstants.EXPLORE_ORDER[j]=temp;
-                }
-
-            }
-
-        }
-    }
-*/
 }
