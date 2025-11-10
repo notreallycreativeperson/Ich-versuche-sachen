@@ -3,7 +3,7 @@ public class Tournament {
     Player[] players;
 
     public GameData versus(Player player1,Player player2) {
-        Game game = new Game(true);
+        Game game = new Game(false);
         GameData gameData = new GameData(player1,player2);
         GameData gameData1;
         GameData gameData2;

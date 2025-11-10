@@ -17,9 +17,9 @@ class PlayerData {
     int gamesWon;
     int gamesLost;
     int gamesDraw;
-    int prunesTT;
-    int prunesAB;
-    int nodesVisited;
+    long prunesTT;
+    long prunesAB;
+    long nodesVisited;
     PlayerData() {
         turns = 0;
         time = 0;
@@ -48,14 +48,14 @@ class GameData {
     private TimeWatcher watcher;
     Player playerMax;
     private long timeMsMax;
-    private int nodesVisitedMax;
-    private int prunesTTMax;
-    private int prunesABMax;
+    private long nodesVisitedMax;
+    private long prunesTTMax;
+    private long prunesABMax;
     Player playerMin;
     private long timeMsMin;
-    private int nodesVisitedMin;
-    private int prunesTTMin;
-    private int prunesABMin;
+    private long nodesVisitedMin;
+    private long prunesTTMin;
+    private long prunesABMin;
     boolean isPlayerMaxWinner;
     boolean isDraw;
     public void setWinner(boolean isPlayerMaxWinner) {
