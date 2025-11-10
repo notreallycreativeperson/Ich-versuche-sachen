@@ -1,5 +1,5 @@
 public interface Player {
-    int getMove(Board board,GameData gameData);
+    int getMove(Board board,PlayerData playerData);
     /** Human-readable name for logging and test display. */
     PlayerData getPlayerData();
 
@@ -15,7 +15,7 @@ public interface Player {
  */
 class PlayerHuman implements Player {
 
-    private PlayerData playerData;
+    public PlayerData playerData;
     private String playerName;
     /**
      * Standardkonstruktor, der den Namen über {@link Visual#getName()} abfragt.
@@ -32,7 +32,7 @@ class PlayerHuman implements Player {
      * @return Die Spaltennummer des gewählten Zuges
      */
     @Override
-    public int getMove(Board board,GameData gameData) {
+    public int getMove(Board board,PlayerData playerData) {
         int move = -1;
         while (move < 0) {
             move = Visual.getMove();
@@ -63,7 +63,7 @@ class PlayerHuman implements Player {
  */
 abstract class PlayerInhumane implements Player {
 
-    private PlayerData playerData;
+    public PlayerData playerData;
     /**
      * Die Suchinstanz für die KI-Zugberechnung
      */
@@ -88,13 +88,13 @@ abstract class PlayerInhumane implements Player {
 
 
     /**
-     * Ermittelt den besten Zug mittels {@link Search#getBestMove(Board, GameData)} )}.
+     * Ermittelt den besten Zug mittels {@link Search#getBestMove(Board, PlayerData)} )}.
      *
      * @param board Das aktuelle {@link Board Spielbrett}
      * @return Die Spaltennummer des besten Zuges
      */
-    public int getMove(Board board,GameData gameData) {
-        return search.getBestMove(board, gameData);
+    public int getMove(Board board,PlayerData playerData) {
+        return search.getBestMove(board, playerData);
     }
 
     public PlayerData getPlayerData() {

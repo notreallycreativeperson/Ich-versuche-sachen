@@ -62,8 +62,8 @@ public class MiniMax {
      * @param hashlast           Hash-Wert der Position, berechnet mit {@link Board#hash(int[][])}
      * @return Die beste Bewertung oder der beste Zug (abhängig von isScore)
      */
-    public int miniMax(int[][] tiles, int depth, int alpha, int beta, boolean isMaxTurn, boolean isScore, int lastmoveX, int lastmoveY, HashMap<Long, Entry> transPositionTable, long hashlast,GameData gameData) {
-        gameData.logNodesVisit(isMaxTurn);
+    public int miniMax(int[][] tiles, int depth, int alpha, int beta, boolean isMaxTurn, boolean isScore, int lastmoveX, int lastmoveY, HashMap<Long, Entry> transPositionTable, long hashlast,PlayerData playerData) {
+        playerData.logNodesVisit();
         if (Board.isWinningMove(lastmoveX, lastmoveY, tiles) && isScore) {
             return (isMaxTurn ? Integer.MIN_VALUE : Integer.MAX_VALUE);
         }
@@ -74,7 +74,7 @@ public class MiniMax {
             if (transPositionTable.containsKey(hashlast)) {
                 Entry entry = transPositionTable.get(hashlast);
                 if (entry.depth() == depth + 1) {
-                    gameData.logPrune(true,isMaxTurn);
+                    playerData.logPrune(true);
                     return entry.score();
                 }
             }
@@ -89,7 +89,7 @@ public class MiniMax {
                 int row = Board.getRow(tiles, i);
                 tiles[i][row] = (isMaxTurn ? GameConstants.PLAYER_MAX : GameConstants.PLAYER_MIN);
                 long hash = Board.hash(tiles);
-                int score = miniMax(tiles, depth - 1, alpha, beta, !isMaxTurn, true, i, row, transPositionTable, hash,gameData);
+                int score = miniMax(tiles, depth - 1, alpha, beta, !isMaxTurn, true, i, row, transPositionTable, hash,playerData);
                 if (tpt) {
                     transPositionTable.put(hash, new Entry(score, depth));
                 }
@@ -109,7 +109,7 @@ public class MiniMax {
                         beta = Math.min(beta, score);
                     }
                     if (beta <= alpha) {
-                        gameData.logPrune(false,isMaxTurn);
+                        playerData.logPrune(false);
                         break;
                     }
                 }

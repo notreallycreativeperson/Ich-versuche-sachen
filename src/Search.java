@@ -19,8 +19,8 @@ public class Search {
         minimax = new MiniMax(eval, abp, tpt, oso);
     }
 
-    public int getBestMove(Board board, GameData gameData) {
-        int i = minimax.miniMax(board.getTiles(), depth, Integer.MIN_VALUE, Integer.MAX_VALUE, board.isMaxTurn, false, 0, 0, transPositionTable, 2, gameData);
+    public int getBestMove(Board board, PlayerData playerData) {
+        int i = minimax.miniMax(board.getTiles(), depth, Integer.MIN_VALUE, Integer.MAX_VALUE, board.isMaxTurn, false, 0, 0, transPositionTable, 2, playerData);
         transPositionTable.clear();
         return i;
     }

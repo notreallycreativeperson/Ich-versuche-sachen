@@ -174,7 +174,7 @@ class Visual {
 
     /**
      * Fragt den Benutzer nach seinem nächsten Zug.
-     * Wird von {@link PlayerHuman#getMove(Board, GameData)} aufgerufen.
+     * Wird von {@link PlayerHuman#getMove(Board, PlayerData)} aufgerufen.
      * Validiert die Eingabe (muss zwischen 1 und 7 sein).
      *
      * @return Die Spaltennummer (0-6) des gewählten Zuges, oder -1 bei ungültiger Eingabe
@@ -203,17 +203,6 @@ class Visual {
         playerData.printPlayerData();
         out.println();
         out.println();
-    }
-
-    public static void printGame(GameData gameData) {
-        out.print(gameData.playerMax.getPlayerName()+" vs "+ gameData.playerMin.getPlayerName()+ ": ");
-        if(gameData.isDraw){
-            out.println(" Draw");
-        } else if (gameData.isPlayerMaxWinner) {
-           out.println(gameData.playerMax.getPlayerName());
-        }else {
-            out.println(gameData.playerMin.getPlayerName());
-        }
     }
 
 }

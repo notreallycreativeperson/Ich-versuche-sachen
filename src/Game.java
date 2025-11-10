@@ -23,34 +23,41 @@ public class Game {
      * Führt die Hauptspielschleife aus.
      * Wechselt zwischen den Spielern ab, bis das Spiel beendet ist.
      */
-    public GameData play(Player playerMax, Player playerMin, Board board) {
-        GameData gameData = new GameData((board.isMaxTurn?playerMax:playerMin),(!board.isMaxTurn?playerMax:playerMin));
+    public void play(Player playerMax, Player playerMin, Board board) {
         while (true) {
 
             if (Board.isWon(board.getTiles())) {
-                gameData.setWinner(!board.isMaxTurn);
-                return gameData;
+                playerMax.getPlayerData().logWin(!board.isMaxTurn);
+                playerMin.getPlayerData().logWin(board.isMaxTurn);
+                System.out.println("Game over!");
+                return;
             }
 
             int move;
-            gameData.logTimeStart();
             if (board.isMaxTurn) {
+                playerMax.getPlayerData().logTimeStart();
                 if(viewBord) {
                     System.out.println(playerMax.getPlayerName()+" Turn:");
                 }
-                move = playerMax.getMove(board,gameData);
-                gameData.logTimeEnd(board.isMaxTurn);
+                move = playerMax.getMove(board,playerMax.getPlayerData());
+                playerMax.getPlayerData().logTimeEnd();
+                playerMax.getPlayerData().logTurn();
             } else {
+                playerMin.getPlayerData().logTimeStart();
                 if(viewBord) {
                     System.out.println(playerMin.getPlayerName() + " Turn:");
                 }
-                move = playerMin.getMove(board,gameData);
-                gameData.logTimeEnd(board.isMaxTurn);
+                move = playerMin.getMove(board,playerMin.getPlayerData());
+                playerMin.getPlayerData().logTimeEnd();
+                playerMin.getPlayerData().logTurn();
             }
 
             if (move == -1) {
-                gameData.setWinner(!board.isMaxTurn);
-                return gameData;
+                playerMax.getPlayerData().logWin(!board.isMaxTurn);
+                playerMin.getPlayerData().logWin(board.isMaxTurn);
+                System.out.println("Game over!");
+
+                return;
             }
 
             board.move(move);
@@ -58,17 +65,15 @@ public class Game {
                 Visual.displayBord(board);
             }
             if(Board.isFinished(board.getTiles())){
-                gameData.setDraw();
-                return gameData;
+                playerMax.getPlayerData().logDraw();
+                playerMin.getPlayerData().logDraw();
+                System.out.println("Game over!");
+                return;
             }
         }
     }
-
-    public GameData play(Player player1, Player player2) {
-        return play(player1, player2, new Board(true));
-    }
-    public GameData play(Player player1, Player player2, boolean isMaxTurn){
-        return play(player1, player2, new Board(isMaxTurn));
+    public void play(Player playerMax, Player playerMin) {
+        play(playerMax, playerMin, new Board(true));
     }
 }
 
